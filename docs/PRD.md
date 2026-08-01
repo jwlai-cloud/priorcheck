@@ -65,18 +65,42 @@ The unit of work is **developing one scene**, not auditing a finished script.
 5. **Classify** — `verified` · `contradicted` · **`contested`** · `unverifiable`.
 6. **Surface inline** on the scene, not in a separate report. Contested claims
    route to a named human; the agent does not resolve them.
-7. **Revise.** The writer accepts a correction or overrides with a reason. The
-   scene is rewritten, and the revision is logged with its rationale and sources.
+7. **Decide — three ways, not two.** Every flag offers:
+   - **Fix** — an unintentional error. Scene revised, correction sourced, then
+     re-checked.
+   - **Keep — deliberate** — artistic license. Scene unchanged; the *choice* is
+     logged as intentional with the real fact recorded beside it.
+   - **Escalate** — contested history, routed to a human consultant.
 8. **Payoff.** One **Imagen** frame of the corrected scene — a visual full-stop,
    not a storyboard feature.
 
 Output: a production-ready scene **plus its provenance record** — what was
 checked, against what source, decided by whom, and why.
 
-**Why it is shaped this way.** A pure verification tool is a compliance widget:
-it creates nothing, and in a three-minute video it is a table of claims. A full
-production crew is too broad to finish well. This is one workflow — scene
-development — with verification as its spine.
+**The principle: it's not "be accurate", it's "know what you're doing."**
+
+A tool that flags every historical deviation is creativity police, and it would
+be wrong — *Bridgerton* is deliberately anachronistic, *Inglourious Basterds*
+rewrites the war on purpose. Artistic license is not an error.
+
+The distinction that matters is **informed vs. accidental**. An informed
+deviation is a creative choice; an uninformed one is the risk that ends in
+apologies. The MBC case was not artistic license — it was errors nobody caught.
+
+So the product does not constrain the writer. It makes every deviation from
+reality **a decision rather than an accident**, and keeps the receipt.
+
+**Mode setting, per project:**
+
+- **Documentary / historical** — strict. A deviation is an error until justified.
+- **Fiction / period drama** — advisory. A deviation is a choice to be logged.
+
+Same engine, different threshold.
+
+**Why this shape.** A pure verification tool is a compliance widget: it creates
+nothing, and on video it is a table of claims. A full production crew is too
+broad to finish. This is one workflow — scene development — with verification
+as its spine.
 
 ## 3. Differentiation
 
@@ -183,6 +207,7 @@ threatens the timeline, cut it — the scene + provenance record is the product.
 |---|---|
 | **Timeline — the biggest one.** 37 days, zero code. | Walking skeleton with live URL by day 5, ledger stubbed. Treat a slip as an early-warning signal. |
 | Live Parallel call fails during judging | 3-min video is **pre-recorded**; the hosted URL stays live separately for judges. |
-| Hosted URL dies before judging ends (Oct 7) | Cloud Run scale-to-zero; verify uptime through the judging window. |
+| Hosted URL dies before judging ends (Oct 7) | **Deploy to Cloud Run, not Agent Engine.** Cloud Run scales to zero (~$0 idle); Agent Engine bills continuously. Budget is a $100 credit and the service must survive ~9 weeks after work stops. Verify uptime through the judging window. |
+| Reads as creativity police | Three-way disposition (fix / keep-deliberate / escalate) and the per-project mode setting. Never assert that a deviation is wrong — assert what was true. |
 | Reads as a generic fact-checker | Pitch discipline — sign-off system, always. See §3. |
 | Agent takes a side on contested history | Hard product rule: `contested` → human. Never resolved by the agent. |
