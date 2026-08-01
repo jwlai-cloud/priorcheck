@@ -217,9 +217,18 @@ classification · inline flags on the scene · accept/override with logged
 rationale · scene revision + re-check loop · BigQuery ledger · contested
 escalation · **one Imagen payoff frame** · deployed hosted URL.
 
-**Out:** a storyboard *feature* (multi-frame, variants, shot boards) · video
+**Out:** **a screenplay application** — no formatting, act structure, character
+or arc tools, multi-scene document management, collaboration, or Final Draft
+export · a storyboard *feature* (multi-frame, variants, shot boards) · video
 generation · full-script batch auditing · a DAM or rights-management system ·
 real broadcaster/studio integrations · mobile.
+
+**The scope line is one scene, not a screenplay.** The drafting capability is
+deliberately thin — it exists to give the loop something to check and something
+to revise. Depth belongs to verification, the three-way decision, and the
+provenance record. This is not an editor with a checker bolted on; it is closer
+to a code-review tool that can also apply the fix. Drifting into "script-writing
+app" is the failure mode that loses the remaining time.
 
 The single Imagen frame is a demo full-stop, not a product surface. If it
 threatens the timeline, cut it — the scene + provenance record is the product.
