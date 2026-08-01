@@ -1,12 +1,13 @@
-# Priorcheck — standing instructions
+# Sceneroom — standing instructions
 
 Read this before doing anything. It encodes decisions already made; don't
 re-litigate them.
 
 ## What this is
 
-**Priorcheck** — an agentic scene room for scripted production, where every
-scene the crew writes is verified before it ships. Submission for the
+**Sceneroom** — an agentic scene room for scripted production. The crew writes
+the scene, then holds it to account: against fact, against canon, and against
+the audience that will actually be reading it closely. Submission for the
 [Agentic Cinema hackathon](https://agentic-cinema.devpost.com), **Parallel track**.
 
 **A scene room that won't let a scene ship wrong.** A writer gives intent; the
@@ -57,8 +58,13 @@ must still be alive in October.
    **stubbed**. *If this slips, say so loudly; it is the project's
    early-warning signal.*
 2. Real Parallel integration (MCP server + Search API).
-3. Agent ensemble: Writer → Extractor → Continuity → Verifier → Rights →
-   Adjudicator, under an orchestrator. Distinct sub-tasks, shared state.
+3. Agent ensemble: Writer → Extractor → Continuity → Verifier → **Fandom** →
+   Rights → Adjudicator, under an orchestrator. Distinct sub-tasks, shared
+   state. The **Fandom** agent asks a different question from the Verifier:
+   not "is this true" but "will this audience object" — something can be
+   factually correct and still be a flashpoint. It also grounds the
+   `contested` verdict empirically: if the web shows an active dispute, it is
+   contested, rather than the model deciding that on its own.
    The accept/override → revise → **re-check** cycle is load-bearing: a fix
    must not silently introduce a new error.
 4. Swap the stub for the **BigQuery** ledger; add an Agent Builder Data Store
@@ -140,5 +146,8 @@ day-5 walking skeleton.
   generation is the crowded lane; we are not competing there.
 - Don't claim the system guarantees correctness. It doesn't and can't. The claim
   is "no unreviewed claim ships".
+- Don't let the Fandom agent become sentiment analysis or social scraping. It
+  answers one question — *what has this audience already litigated about this
+  property or period?* — with sources.
 - Don't put the claims ledger in session state — the rules explicitly want
   "updating dynamic databases", and session state reads as a toy.

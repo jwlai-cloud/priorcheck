@@ -1,4 +1,4 @@
-# Priorcheck — PRD
+# Sceneroom — PRD
 
 _Agentic Cinema hackathon · Parallel track · deadline 2026-09-07 14:00 PT._
 
@@ -48,7 +48,7 @@ but a diplomatic incident.
 
 **Adjacent, not competing.** Platforms like Utopai's PAI sell on *internal*
 coherence — narrative continuity and character consistency within the generated
-work. Priorcheck verifies *externally*, against the real world, and produces a
+work. Sceneroom verifies *externally*, against the real world, and produces a
 cited, signed-off record. A studio generating with PAI needs this more, not
 less. Expect a judge to raise the comparison; the distinction is generation tool
 vs. compliance record.
@@ -66,16 +66,23 @@ The unit of work is **developing one scene**, not auditing a finished script.
    internal consistency across scenes written out of order.
 4. **Verify externally.** Verification agent checks each claim against the open
    web via **Parallel**, capturing sources.
-5. **Classify** — `verified` · `contradicted` · **`contested`** · `unverifiable`.
-6. **Surface inline** on the scene, not in a separate report. Contested claims
+5. **Scan the fandom.** A Fandom agent searches what this property's audience
+   actually tracks and argues about — wikis, forums, reviews, past
+   controversies — and flags what they are likely to catch. This is a different
+   question from "is it true": something can be factually fine and still be a
+   flashpoint.
+6. **Classify** — `verified` · `contradicted` · **`contested`** · `unverifiable`.
+   *`contested` is determined empirically:* if the web shows people actively
+   disputing it, it is contested — the model is not asked to judge that itself.
+7. **Surface inline** on the scene, not in a separate report. Contested claims
    route to a named human; the agent does not resolve them.
-7. **Decide — three ways, not two.** Every flag offers:
+8. **Decide — three ways, not two.** Every flag offers:
    - **Fix** — an unintentional error. Scene revised, correction sourced, then
      re-checked.
    - **Keep — deliberate** — artistic license. Scene unchanged; the *choice* is
      logged as intentional with the real fact recorded beside it.
    - **Escalate** — contested history, routed to a human consultant.
-8. **Payoff.** One **Imagen** frame of the corrected scene — a visual full-stop,
+9. **Payoff.** One **Imagen** frame of the corrected scene — a visual full-stop,
    not a storyboard feature.
 
 Output: a production-ready scene **plus its provenance record** — what was
@@ -128,6 +135,11 @@ grounding does a version of it. **The checking is the commodity.** The product i
   a production needs "get a consultant" as much as "this date is wrong".
 - **A provenance record** the studio can produce when a controversy lands:
   here is what we checked, what we chose, and why.
+- **It models the people who actually catch these things.** Fans are the
+  industry's de facto continuity QA — they maintain the wikis, track the props,
+  and litigate the lore. The MBC errors were caught by *viewers*, not by the
+  production. The Fandom agent runs that scrutiny **before** air instead of
+  after, which is the whole thesis in one sentence.
 
 **Non-goal: guaranteeing correctness.** Retrieval isn't omniscience, sources
 conflict, and some disputes (Northeast Project) are contested historiography
@@ -144,6 +156,7 @@ Orchestrator
   ├─ Extractor    — scene → structured claims
   ├─ Continuity   — claims vs. production bible (internal canon)
   ├─ Verifier     — claim → verdict + sources          [Parallel]
+  ├─ Fandom       — what will this audience catch?      [Parallel]
   ├─ Rights       — asset/music/trademark clearance     [Parallel]
   └─ Adjudicator  — classify; escalate contested → human
                         ↓

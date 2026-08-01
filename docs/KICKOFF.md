@@ -3,7 +3,7 @@
 Run from the repo root:
 
 ```bash
-cd /Users/junwei.lai/Projects/Agent/priorcheck && claude
+cd /Users/junwei.lai/Projects/Agent/sceneroom && claude
 ```
 
 `CLAUDE.md` loads automatically. Paste the prompt below as the first message.
@@ -16,7 +16,7 @@ cd /Users/junwei.lai/Projects/Agent/priorcheck && claude
 > already made under adversarial review. Don't re-litigate them; if you think one
 > is wrong, say so in a sentence and continue.
 >
-> **Context.** This is Priorcheck, an agentic scene room for scripted
+> **Context.** This is Sceneroom, an agentic scene room for scripted
 > production: the crew drafts a scene from the writer's intent, verifies every
 > checkable claim in it against canon and the open web, surfaces flags inline
 > with citations, and revises on the writer's accept/override — leaving a

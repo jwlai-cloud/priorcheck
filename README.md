@@ -1,7 +1,7 @@
-# Priorcheck
+# Sceneroom
 
-**An agentic scene room for scripted production — where every scene the crew
-writes is verified before it ships.**
+**An agentic scene room for scripted production — the crew writes the scene,
+then holds it to account.**
 
 Built on Google ADK and Gemini, with verification grounded in [Parallel](https://parallel.ai).
 Submission for the [Agentic Cinema hackathon](https://agentic-cinema.devpost.com) — **Parallel track**.
@@ -30,11 +30,13 @@ Give it intent — *"night scene, 1963, the detective loses her badge."*
 3. It **checks canon** — the production bible, for scenes written out of order.
 4. It **verifies externally** against the open web through Parallel, keeping the
    sources.
-5. Flags land **inline on the scene**, with citations.
-6. Anything it can't adjudicate is marked **contested** and routed to a human.
-7. You accept or override; the scene is **revised**, the rationale logged, and
+5. It **scans the fandom** — what this audience already tracks and argues about
+   — because something can be factually fine and still be a flashpoint.
+6. Flags land **inline on the scene**, with citations.
+7. Anything it can't adjudicate is marked **contested** and routed to a human.
+8. You accept or override; the scene is **revised**, the rationale logged, and
    the corrected scene **re-checked**.
-8. One **Imagen** frame closes the loop.
+9. One **Imagen** frame closes the loop.
 
 You get a production-ready scene **and its provenance record** — what was
 checked, against which source, decided by whom, and why.
