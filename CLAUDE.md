@@ -56,6 +56,56 @@ must still be alive in October.
 6. Secret Manager, least-privilege service account.
 7. 3-minute video (budget 2 full days) + Devpost write-up.
 
+## Verification playbooks = ADK Skills
+
+Domain verification methodology ships as **ADK Skills**, loaded at runtime — not
+hardcoded prompts. This is how escalation rules and authoritative sources become
+data the user can extend.
+
+```
+skills/
+  korean-period-drama/
+    SKILL.md          # required, UPPERCASE
+    references/*.md   # pinned authoritative sources, known-contested topics
+    assets/*          # templates, schemas
+    scripts/*.py      # deterministic checks, run via run_skill_script
+```
+
+```python
+from google.adk.skills import load_skill_from_dir
+from google.adk.tools import skill_toolset
+
+skill = load_skill_from_dir(pathlib.Path(__file__).parent / "skills" / "korean-period-drama")
+toolset = skill_toolset.SkillToolset(skills=[skill], additional_tools=[...])
+```
+
+**Verified against installed google-adk 2.5.0** — do not trust cheatsheets here:
+
+- `load_skill_from_dir` exists. **`load_skills_from_dir` (plural) does NOT** —
+  loop over dirs, or use `SkillRegistry`.
+- `SkillToolset(skills=None, *, registry=None, code_executor=None,
+  script_timeout=300, additional_tools=None, tool_name_prefix=None,
+  tool_filter=None)`.
+- Injected tools: `ListSkillsTool`, `SearchSkillsTool`, `LoadSkillTool`,
+  `LoadSkillResourceTool`, `RunSkillScriptTool`. Plus
+  `DEFAULT_SKILL_SYSTEM_INSTRUCTION`.
+- **Marked Experimental.** Acceptable for this, but keep the agent working if
+  skill loading fails.
+
+**Packaging rules the validator enforces** (Claude Code tolerates violations,
+ADK does not):
+
+- `SKILL.md` — **uppercase**. A lowercase `skill.md` works on macOS and fails on
+  any case-sensitive filesystem (i.e. in the container).
+- YAML frontmatter required: `name` must equal the directory name, lowercase
+  kebab-case, ≤64 chars, no leading/trailing/consecutive hyphens; `description`
+  non-empty, ≤1024 chars.
+- Only `references/`, `assets/`, `scripts/` are recognised. A `resources/` dir
+  is unreachable via `load_skill_resource`.
+
+**Scope discipline:** skills land at build step 3–4. They must not delay the
+day-5 walking skeleton.
+
 ## Working preferences
 
 - Use the ADK skills before writing agent code: `google-agents-cli-scaffold`

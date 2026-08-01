@@ -79,6 +79,22 @@ Orchestrator
               Agent Builder Data Store (grounding corpus)
 ```
 
+**Verification playbooks are ADK Skills.** Each domain — Korean period drama,
+firearms & props, music rights — ships as a loadable skill directory
+(`SKILL.md` + `references/` + `scripts/`) consumed via `SkillToolset`. This
+matters for three reasons:
+
+- **Anti-hallucination.** Pinned authoritative sources in `references/` ground
+  the Verifier on curated authorities rather than whatever search returns first.
+- **Escalation rules become data.** "Northeast Project → always `contested`,
+  never adjudicate" lives in the Korean-drama skill, not in code.
+- **The customer can extend it.** A standards desk adds its own house
+  guidelines as a skill without forking the system.
+
+ADK ships the loader (`google.adk.skills`, Experimental), so this costs
+packaging discipline rather than a subsystem. See `CLAUDE.md` for the verified
+API surface and the frontmatter/layout rules the validator enforces.
+
 **Partner integration:** use Parallel's **MCP server** *and* Search API. The
 rules say "product or MCP server"; the main page says "MCP server". Using the
 MCP server satisfies both, removing any Stage One pass/fail ambiguity.
