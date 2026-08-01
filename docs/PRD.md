@@ -17,9 +17,37 @@ apologies** and **scenes were deleted from the broadcast**
 ([Korea Star Daily, 2026-06-06](https://www.koreastardaily.com/tc/news/162818)).
 Those are post-air costs for a pre-air failure.
 
-**Who it is for:** standards & practices reviewers, compliance leads, and the
-producers who answer to them. Secondary: script supervisors and post supervisors
-doing rights clearance.
+**Who it is for.** Primary: **AI-native studios producing scripted content at
+volume** — e.g. [Utopai Studios](https://www.utopaistudios.com/), whose Utopai
+East JV acquired a Seoul production house in Feb 2026 with 15 scripted series
+and features in development. They are the sharper customer than legacy
+broadcasters, structurally:
+
+- They ship at higher velocity — that is their entire pitch.
+- They have **no standards & practices department**. Broadcasters built that
+  over decades; a studio founded in 2025 has not.
+- Factual errors are not merely *missed*, they are **introduced** — generated
+  content invents plausible period detail, so the base rate of risk is higher.
+- An accuracy scandal is existential rather than embarrassing: "AI studio
+  distorts history" is a story the press is already primed to write.
+- They can adopt an agent/API product immediately; a broadcaster procures for
+  nine months.
+
+Secondary: broadcaster standards & compliance desks, script supervisors, and
+post supervisors doing rights clearance.
+
+**Why now.** AI-assisted production is scaling into Korean scripted content
+(Utopai East, 2026) in the same year and market that demonstrated how severely
+historical inaccuracy is punished (MBC, June 2026) — including on politically
+charged ground like the Northeast Project, where an error is not a correction
+but a diplomatic incident.
+
+**Adjacent, not competing.** Platforms like Utopai's PAI sell on *internal*
+coherence — narrative continuity and character consistency within the generated
+work. Priorcheck verifies *externally*, against the real world, and produces a
+cited, signed-off record. A studio generating with PAI needs this more, not
+less. Expect a judge to raise the comparison; the distinction is generation tool
+vs. compliance record.
 
 ## 2. What it does
 
