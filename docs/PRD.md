@@ -4,11 +4,15 @@ _Agentic Cinema hackathon · Parallel track · deadline 2026-09-07 14:00 PT._
 
 ## 1. Problem
 
-A broadcaster's **standards / compliance reviewer** has to sign off that a
-period drama won't trigger a public accuracy controversy before it airs. Today
-that is manual: someone reads the script, notices what they happen to know is
-wrong, and researches it by hand. Coverage depends on what one tired person
-recognises at 2am.
+Scripted production keeps shipping historical and factual errors nobody meant
+to make. Today the only defence is manual: someone reads the script, notices
+what they happen to know is wrong, and researches it by hand. Coverage depends
+on what one tired person recognises at 2am — and on generated content, the
+errors arrive already sounding plausible.
+
+The problem is **not** that productions deviate from history. Deliberate
+deviation is craft. The problem is that nobody can tell the deliberate
+deviations from the accidental ones until after air.
 
 **It has a named cost.** In June 2026, MBC's *21st Century Grand Princess* drew
 sustained criticism for "verification errors, historical distortions, and
@@ -104,20 +108,26 @@ as its spine.
 
 ## 3. Differentiation
 
-> **A sign-off system of record for pre-air factual risk — it doesn't tell you
-> the answer, it tells you what's checked, what's cited, and what a human still
-> has to decide.**
+> **A scene room that writes with you and makes every deviation from reality a
+> deliberate choice on the record — instead of an accident someone finds after
+> it airs.**
 
 An LLM that fact-checks a script is obvious in 2026; Gemini with Search
 grounding does a version of it. **The checking is the commodity.** The product is:
 
-- **Coverage** across a whole script, not one question at a time.
-- **A ledger that persists** — every claim, verdict, source, reviewer, timestamp.
+- **It creates, then checks its own work** — the crew drafts the scene and
+  immediately holds it to account. Verification is inline in the writing loop,
+  not a gate someone remembers to run afterwards.
+- **Deviation is a first-class outcome, not a failure.** "Keep — deliberate"
+  is a supported answer that gets recorded, so the tool serves fiction as
+  readily as documentary.
+- **A ledger that persists** — every claim, verdict, source, decision, and who
+  made it.
 - **Explicit escalation** of what cannot be adjudicated. An agent that knows the
-  limits of its own authority is more useful to a standards desk than one that
-  claims omniscience — the desk needs "get a consultant" as much as "this date
-  is wrong".
-- **An audit trail** the broadcaster can produce when a controversy lands.
+  limits of its own authority is worth more than one claiming omniscience —
+  a production needs "get a consultant" as much as "this date is wrong".
+- **A provenance record** the studio can produce when a controversy lands:
+  here is what we checked, what we chose, and why.
 
 **Non-goal: guaranteeing correctness.** Retrieval isn't omniscience, sources
 conflict, and some disputes (Northeast Project) are contested historiography
