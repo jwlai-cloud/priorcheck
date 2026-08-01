@@ -16,8 +16,11 @@ cd /Users/junwei.lai/Projects/Agent/priorcheck && claude
 > already made under adversarial review. Don't re-litigate them; if you think one
 > is wrong, say so in a sentence and continue.
 >
-> **Context.** This is Priorcheck, a pre-air factual risk sign-off system for
-> broadcast standards desks. It's a submission for the Agentic Cinema hackathon
+> **Context.** This is Priorcheck, an agentic scene room for scripted
+> production: the crew drafts a scene from the writer's intent, verifies every
+> checkable claim in it against canon and the open web, surfaces flags inline
+> with citations, and revises on the writer's accept/override — leaving a
+> provenance record. It's a submission for the Agentic Cinema hackathon
 > on the **Parallel** track. Deadline **2026-09-07 14:00 PT**; judging runs
 > Sep 23 – Oct 7, so whatever we deploy has to still be alive in October. The
 > repo was created inside the contest window and must stay clean-room — never
@@ -25,8 +28,9 @@ cd /Users/junwei.lai/Projects/Agent/priorcheck && claude
 > design context only).
 >
 > **Your objective this session: the day-5 walking skeleton.** A live, publicly
-> hosted URL where a script goes in, one claim is extracted and verified through
-> Parallel, and the result renders on screen. The BigQuery ledger stays
+> hosted URL where an intent line goes in, a scene is drafted, one claim is
+> extracted and verified through Parallel, and the flag renders on the scene.
+> The BigQuery ledger stays
 > **stubbed** — do not build it yet. Deploying early beats deploying well; this
 > gate is the project's early-warning signal, so if it's going to slip, say so
 > loudly rather than quietly building something better.

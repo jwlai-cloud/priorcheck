@@ -5,15 +5,21 @@ re-litigate them.
 
 ## What this is
 
-**Priorcheck** — a pre-air factual risk sign-off system for broadcast standards
-desks. Submission for the [Agentic Cinema hackathon](https://agentic-cinema.devpost.com),
-**Parallel track**.
+**Priorcheck** — an agentic scene room for scripted production, where every
+scene the crew writes is verified before it ships. Submission for the
+[Agentic Cinema hackathon](https://agentic-cinema.devpost.com), **Parallel track**.
 
-A reviewer submits a script. An agent ensemble extracts every checkable
-factual / historical / rights claim, verifies each against the open web via
-**Parallel**, writes the verdict and its sources into a **BigQuery claims
-ledger**, escalates what it cannot adjudicate to a named human, and records the
-sign-off permanently.
+**A scene room that won't let a scene ship wrong.** A writer gives intent; the
+crew drafts the scene, extracts every checkable factual / historical /
+rights-bearing claim, checks it against the production bible and against the
+open web via **Parallel**, surfaces flags **inline on the scene** with
+citations, escalates what it cannot adjudicate to a named human, and — on the
+writer's accept or override — revises the scene and logs the rationale into a
+**BigQuery claims ledger**. One **Imagen** frame closes the loop as a visual
+payoff.
+
+Output is a production-ready scene **plus its provenance record**. Verification
+is the spine, but the product creates something.
 
 Full spec: [`docs/PRD.md`](docs/PRD.md).
 
@@ -34,27 +40,36 @@ Full spec: [`docs/PRD.md`](docs/PRD.md).
    historiography or attribution, mark it `contested` and route it to a human.
    Do not have the agent pick a side. This is a core product behaviour, not a
    caveat.
-5. **Pitch it as a sign-off system, never as an "AI fact-checker."** The
-   fact-checking is commodity; the workflow, the ledger and the audit trail are
-   the product. Getting this wrong loses the *Quality of the Idea* criterion.
+5. **Never pitch this as an "AI fact-checker."** Fact-checking is commodity —
+   Gemini with Search grounding does a version of it. The product is a scene
+   room whose output carries a provenance record: what was checked, against
+   which source, decided by whom, and why. Equally, don't pitch it as a pure
+   compliance tool — it *writes*. Getting the framing wrong loses *Quality of
+   the Idea*.
 
 ## Build order (the gate matters)
 
 **Deadline: 2026-09-07 14:00 PT.** Judging 2026-09-23 → 10-07, so the hosted URL
 must still be alive in October.
 
-1. **Walking skeleton with a live hosted URL — target day 5.** Script in →
-   one claim verified via Parallel → result on screen. Ledger **stubbed**.
-   *If this slips, say so loudly; it is the project's early-warning signal.*
+1. **Walking skeleton with a live hosted URL — target day 5.** Intent in →
+   scene drafted → one claim verified via Parallel → flag on screen. Ledger
+   **stubbed**. *If this slips, say so loudly; it is the project's
+   early-warning signal.*
 2. Real Parallel integration (MCP server + Search API).
-3. Agent ensemble: Extractor → Verifier → Rights → Adjudicator, under an
-   orchestrator. Distinct sub-tasks, shared ledger state.
+3. Agent ensemble: Writer → Extractor → Continuity → Verifier → Rights →
+   Adjudicator, under an orchestrator. Distinct sub-tasks, shared state.
+   The accept/override → revise → **re-check** cycle is load-bearing: a fix
+   must not silently introduce a new error.
 4. Swap the stub for the **BigQuery** ledger; add an Agent Builder Data Store
    for grounding.
-5. Reviewer UI — sign-off, citations, contested queue. **Design is 25% of the
-   score; budget a third of the build for it, not the leftovers.**
+5. Scene room UI — the scene with **inline flags**, citations, contested queue,
+   accept/override. **Design is 25% of the score; budget a third of the build
+   for it, not the leftovers.**
 6. Secret Manager, least-privilege service account.
-7. 3-minute video (budget 2 full days) + Devpost write-up.
+7. One Imagen payoff frame — a visual full-stop, not a storyboard feature.
+   Cut it if it threatens the timeline.
+8. 3-minute video (budget 2 full days) + Devpost write-up.
 
 ## Verification playbooks = ADK Skills
 
@@ -120,8 +135,9 @@ day-5 walking skeleton.
 
 ## Don't
 
-- Don't build a storyboard/image-generation feature. It's the crowded lane and
-  it is not this product.
+- Don't build a storyboard *feature* — no multi-frame boards, no variants, no
+  shot grid. Exactly **one** Imagen frame, as the demo's closing beat. Image
+  generation is the crowded lane; we are not competing there.
 - Don't claim the system guarantees correctness. It doesn't and can't. The claim
   is "no unreviewed claim ships".
 - Don't put the claims ledger in session state — the rules explicitly want

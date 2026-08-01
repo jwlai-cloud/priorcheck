@@ -49,25 +49,34 @@ cited, signed-off record. A studio generating with PAI needs this more, not
 less. Expect a judge to raise the comparison; the distinction is generation tool
 vs. compliance record.
 
-## 2. What it does
+## 2. What it does — a scene room that won't let a scene ship wrong
 
-A reviewer uploads a script or scene. The system then:
+The unit of work is **developing one scene**, not auditing a finished script.
 
-1. **Extracts** every checkable claim — factual, historical, rights-bearing.
-   ("A 1963 detective carries a Motorola HT-200." "This score cue is *Clair de
-   Lune*." "Goguryeo is described as…")
-2. **Verifies** each claim against the open web via **Parallel**, capturing the
-   sources.
-3. **Classifies** each into `verified` · `contradicted` · **`contested`** ·
-   `unverifiable`.
-4. **Writes** the claim, verdict, sources, and timestamp into a **BigQuery
-   claims ledger**.
-5. **Escalates** `contested` claims to a named human — it does not resolve them.
-6. **Records** the reviewer's decision and rationale against the claim,
-   permanently.
+1. **Draft.** The writer gives intent — *"night scene, 1963, the detective loses
+   her badge"* — and the crew drafts or expands the scene.
+2. **Extract.** Every checkable claim in the draft is pulled out: factual,
+   historical, rights-bearing. *("A 1963 detective carries a Motorola HT-200."
+   "The cue is Clair de Lune." "Goguryeo is described as…")*
+3. **Check canon.** Continuity agent compares against the production bible —
+   internal consistency across scenes written out of order.
+4. **Verify externally.** Verification agent checks each claim against the open
+   web via **Parallel**, capturing sources.
+5. **Classify** — `verified` · `contradicted` · **`contested`** · `unverifiable`.
+6. **Surface inline** on the scene, not in a separate report. Contested claims
+   route to a named human; the agent does not resolve them.
+7. **Revise.** The writer accepts a correction or overrides with a reason. The
+   scene is rewritten, and the revision is logged with its rationale and sources.
+8. **Payoff.** One **Imagen** frame of the corrected scene — a visual full-stop,
+   not a storyboard feature.
 
-Output is a reviewed script where every claim is either cited-and-cleared or
-explicitly assigned to a person.
+Output: a production-ready scene **plus its provenance record** — what was
+checked, against what source, decided by whom, and why.
+
+**Why it is shaped this way.** A pure verification tool is a compliance widget:
+it creates nothing, and in a three-minute video it is a table of claims. A full
+production crew is too broad to finish well. This is one workflow — scene
+development — with verification as its spine.
 
 ## 3. Differentiation
 
@@ -97,15 +106,22 @@ Google ADK 2.x agent ensemble on Gemini (Vertex / Agent Platform).
 
 ```
 Orchestrator
-  ├─ Extractor    — script → structured claims
-  ├─ Verifier     — claim → verdict + sources        [Parallel]
-  ├─ Rights       — asset/music/trademark clearance   [Parallel]
+  ├─ Writer       — intent → scene draft; applies accepted corrections
+  ├─ Extractor    — scene → structured claims
+  ├─ Continuity   — claims vs. production bible (internal canon)
+  ├─ Verifier     — claim → verdict + sources          [Parallel]
+  ├─ Rights       — asset/music/trademark clearance     [Parallel]
   └─ Adjudicator  — classify; escalate contested → human
                         ↓
-              BigQuery claims ledger  ←→  Reviewer UI (sign-off)
-                        ↓
-              Agent Builder Data Store (grounding corpus)
+        BigQuery claims ledger  ←→  Scene room UI (inline flags, sign-off)
+                        ↓                      ↓
+   Agent Builder Data Store            Imagen — one payoff frame
+        (grounding corpus)
 ```
+
+The revise loop is a real cycle: an accepted correction sends the scene back
+through extraction and verification, so a fix cannot silently introduce a new
+error.
 
 **Verification playbooks are ADK Skills.** Each domain — Korean period drama,
 firearms & props, music rights — ships as a loadable skill directory
@@ -148,12 +164,18 @@ sources).
 
 ## 6. Scope
 
-**In:** claim extraction · Parallel verification with citations · four-way
-classification · BigQuery ledger · contested escalation · reviewer sign-off UI ·
-audit trail · deployed hosted URL.
+**In:** scene drafting from intent · claim extraction · continuity check against
+the production bible · Parallel verification with citations · four-way
+classification · inline flags on the scene · accept/override with logged
+rationale · scene revision + re-check loop · BigQuery ledger · contested
+escalation · **one Imagen payoff frame** · deployed hosted URL.
 
-**Out:** storyboard / image generation · video generation · script *rewriting* ·
-a full DAM or rights-management system · real broadcaster integrations · mobile.
+**Out:** a storyboard *feature* (multi-frame, variants, shot boards) · video
+generation · full-script batch auditing · a DAM or rights-management system ·
+real broadcaster/studio integrations · mobile.
+
+The single Imagen frame is a demo full-stop, not a product surface. If it
+threatens the timeline, cut it — the scene + provenance record is the product.
 
 ## 7. Risks
 
