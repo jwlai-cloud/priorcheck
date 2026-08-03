@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sceneroom</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <header>
+    <span class="mark">Sceneroom</span>
+    <span class="slug" id="slug">no scene yet</span>
+    <span class="live" id="live" title="Whether verification is hitting the live Parallel API">
+      <span class="dot"></span><span id="liveLabel">checking…</span>
+    </span>
+  </header>
+
+  <div class="wrap">
+    <!-- The brief -->
+    <aside class="brief">
+      <h2>The brief</h2>
+
+      <label for="intent">What happens in this scene</label>
+      <textarea id="intent" placeholder="A detective loses her badge in a rain-soaked alley…"></textarea>
+
+      <label for="setting">Period and place</label>
+      <input type="text" id="setting" placeholder="Seoul, 1963" />
+
+      <label for="mode">Production type</label>
+      <select id="mode">
+        <option value="fiction">Fiction — deviation is a choice</option>
+        <option value="documentary">Documentary — deviation is an error</option>
+      </select>
+
+      <button class="go" id="go">Write the scene</button>
+
+      <div class="hint">
+        <b>Try one:</b>
+        <button class="example" data-intent="A detective confronts an informant in a rain-soaked alley and loses her badge in the struggle. She radios for backup." data-setting="Seoul, 1963">Seoul, 1963 — a detective loses her badge</button>
+        <button class="example" id="demoBtn">Or load the sample scene (no API key needed)</button>
+        <button class="example" data-intent="A court scholar quietly warns a young official that the history he is copying has been altered to please the throne." data-setting="Joseon Korea, 1443">Joseon, 1443 — a scholar spots an altered record</button>
+      </div>
+    </aside>
+
+    <!-- The page + margin -->
+    <main class="stage">
+      <div class="status" id="status"><span id="statusText">Give the crew a brief to start.</span><span class="bar"></span></div>
+      <div id="err"></div>
+
+      <div class="pagewrap">
+        <article class="page" id="page">
+          <div class="sluglinerow"><span>Untitled scene</span><span class="rev">—</span></div>
+          <span style="color:var(--graphite)">The scene will appear here, with anything checkable underlined.</span>
+        </article>
+
+        <div class="margin" id="margin">
+          <div class="empty">Notes from the crew appear here, in the margin — one per flagged span, with its sources and what you decided.</div>
+        </div>
+      </div>
+
+      <section class="prov" id="provWrap" hidden>
+        <h2>Provenance</h2>
+        <ol id="prov"></ol>
+      </section>
+    </main>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
