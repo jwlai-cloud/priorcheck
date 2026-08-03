@@ -66,11 +66,17 @@ The unit of work is **developing one scene**, not auditing a finished script.
    internal consistency across scenes written out of order.
 4. **Verify externally.** Verification agent checks each claim against the open
    web via **Parallel**, capturing sources.
-5. **Scan the fandom.** A Fandom agent searches what this property's audience
-   actually tracks and argues about — wikis, forums, reviews, past
-   controversies — and flags what they are likely to catch. This is a different
-   question from "is it true": something can be factually fine and still be a
+5. **Scan the fandom.** A Fandom agent asks a different question from the
+   Verifier — not *"is this true"* but *"what does the audience for this kind of
+   content already litigate?"* Something can be factually fine and still be a
    flashpoint.
+
+   **It searches precedent, not sentiment.** For a Joseon-era drama that means
+   the live discourse and the documented track record: Northeast Project
+   disputes, hanbok accuracy, honorific misuse, portrayals of real historical
+   figures, and which past productions drew complaints for each. The output is
+   *"three dramas since 2023 were criticised for this — here are the sources"*,
+   not a mood score.
 6. **Classify** — `verified` · `contradicted` · **`contested`** · `unverifiable`.
    *`contested` is determined empirically:* if the web shows people actively
    disputing it, it is contested — the model is not asked to judge that itself.
@@ -169,6 +175,19 @@ Orchestrator
 The revise loop is a real cycle: an accepted correction sends the scene back
 through extraction and verification, so a fix cannot silently introduce a new
 error.
+
+### Where the fandom data comes from
+
+There is none to prepare, and that is the point. The agent never searches for
+*"fans of our fictional show"* — an invented property has no audience and the
+feature would find nothing. It searches **the existing public discourse around
+the period, genre, and subject matter**, which is real, dense, and already
+indexed. Parallel queries it live.
+
+**Demo constraint that follows:** the scene must be set in a real period with
+active discourse — 1963 Seoul, Joseon era. An invented sci-fi world would give
+this agent nothing to find. This is a deliberate scoping choice, not a
+limitation to hide.
 
 **Verification playbooks are ADK Skills.** Each domain — Korean period drama,
 firearms & props, music rights — ships as a loadable skill directory
