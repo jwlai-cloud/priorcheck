@@ -258,7 +258,7 @@ $("demoBtn").onclick = async () => {
   } catch (e) { setStatus("Stopped."); setError(e.message); }
   finally { busy = false; }
 };
-document.querySelectorAll(".example").forEach((b) => {
+document.querySelectorAll(".example[data-intent]").forEach((b) => {
   b.onclick = () => {
     $("intent").value = b.dataset.intent;
     $("setting").value = b.dataset.setting;
