@@ -1,6 +1,4 @@
-# Kickoff — dispatch prompt for the build session
-
-Run from the repo root:
+# Kickoff — continuing the build
 
 ```bash
 cd /Users/junwei.lai/Projects/Agent/sceneroom && claude
@@ -10,65 +8,100 @@ cd /Users/junwei.lai/Projects/Agent/sceneroom && claude
 
 ---
 
-## The prompt
+## Where the build actually is (2026-08-03)
 
-> Read `CLAUDE.md` and `docs/PRD.md` before doing anything — they hold decisions
-> already made under adversarial review. Don't re-litigate them; if you think one
-> is wrong, say so in a sentence and continue.
->
-> **Context.** This is Sceneroom, an agentic scene room for scripted
-> production: the crew drafts a scene from the writer's intent, verifies every
-> checkable claim in it against canon and the open web, surfaces flags inline
-> with citations, and revises on the writer's accept/override — leaving a
-> provenance record. It's a submission for the Agentic Cinema hackathon
-> on the **Parallel** track. Deadline **2026-09-07 14:00 PT**; judging runs
-> Sep 23 – Oct 7, so whatever we deploy has to still be alive in October. The
-> repo was created inside the contest window and must stay clean-room — never
-> copy code from `../scripervisor` (a pre-window research spike; read it for
-> design context only).
->
-> **Your objective this session: the day-5 walking skeleton.** A live, publicly
-> hosted URL where an intent line goes in, a scene is drafted, one claim is
-> extracted and verified through Parallel, and the flag renders on the scene.
-> The BigQuery ledger stays
-> **stubbed** — do not build it yet. Deploying early beats deploying well; this
-> gate is the project's early-warning signal, so if it's going to slip, say so
-> loudly rather than quietly building something better.
->
-> **Use these skills, in roughly this order:**
-> - `hackathon-engineering` — standing practice for this project: keep
->   `docs/ARCHITECTURE.md`, ADRs and a progress log current as the code changes,
->   and check current SDK docs rather than relying on training data.
-> - `google-agents-cli-workflow` — the ADK development lifecycle entrypoint.
-> - `google-agents-cli-scaffold` — create the project (ADK 2.x, Python).
-> - `google-agents-cli-adk-code` — agent/tool/state API patterns while building.
-> - `google-agents-cli-deploy` — Cloud Run or Agent Engine for the hosted URL.
-> - `agent-skills:incremental-implementation` — thin vertical slices; land each
->   one working before widening.
-> - `frontend-design` — when the reviewer UI starts. Design is 25% of the score
->   and most entries will ship a chat box; budget a third of the build for it.
->
-> **Verify, don't trust.** Check API surfaces against the installed package or
-> official docs. Cheatsheets have twice been wrong on this project: the ADK 2.5
-> graph edge API is a `{route: target}` dict rather than a 3-tuple, and
-> `google.adk.skills.load_skills_from_dir` doesn't exist despite being
-> documented.
->
-> **Housekeeping.** No `Co-Authored-By` trailers in commits. Leave one runnable
-> check behind for non-trivial logic — no heavy test ceremony.
->
-> **Start by** proposing a concrete plan for the skeleton: the slices, the
-> deployment target, and what you're deliberately stubbing. Wait for my go
-> before writing code.
+**Working, committed, and pushed.** The full loop runs locally against live
+Gemini and has been driven end to end in a real browser.
+
+| Piece | State |
+|---|---|
+| Agents — writer, reviser, extractor, verifier, fandom | ✅ `app/agents/` |
+| Workflow — draft → extract → check → decide → revise → re-check | ✅ `app/orchestrator.py` |
+| Parallel integration | ⚠️ code done (`app/services/parallel_client.py`), **running on offline fixtures — no API key yet** |
+| Claims ledger | ⚠️ in-memory; BigQuery implemented behind the same Protocol, switches on `BIGQUERY_DATASET` |
+| UI — script page, margin notes, provenance | ✅ `frontend/` |
+| Tests | ✅ 7 unit passing, ruff clean |
+| **Deployed hosted URL** | ❌ **not done — blocked on gcloud auth** |
+| Imagen payoff frame | ❌ not started (`ENABLE_IMAGE` flag exists, unused) |
+| Demo video + Devpost write-up | ❌ not started |
+
+Verified rather than assumed: Gemini drafts a scene with genuinely checkable
+detail, extraction returns 6–8 claims including audience-sensitivity ones, the
+pinned demo scene produces two sourced contradictions, and "Keep — deliberate"
+leaves the scene text untouched while recording the rationale in provenance.
+
+### Two blockers, both needing the human
+
+1. **`gcloud auth login`** — the token expired; non-interactive commands cannot
+   refresh it. Also decide *which project*: it currently defaults to `tgds-dev`,
+   which is a TrafficGuard work project, while the $100 hackathon credits are
+   likely on a personal account.
+2. **`PARALLEL_API_KEY`** — sign up at parallel.ai. Everything runs on offline
+   fixtures until then, and the UI says so honestly. This is a *scored,
+   mandatory* requirement, so it is the highest-value outstanding item.
 
 ---
 
-## After the skeleton lands
+## The prompt
 
-Build order from `CLAUDE.md`: real Parallel integration (MCP + Search API) →
-the four-agent ensemble → swap the stub for the BigQuery ledger + Agent Builder
-Data Store → reviewer UI → Secret Manager and least-privilege SA → 3-minute
-video (budget two full days) and the Devpost write-up.
+> Read `CLAUDE.md` and `docs/PRD.md` first — they hold decisions already made
+> under adversarial review. Don't re-litigate them; if you think one is wrong,
+> say so in a sentence and continue. Then read the "Where the build actually is"
+> section of `docs/KICKOFF.md`.
+>
+> **Context.** Sceneroom is an agentic scene room for scripted production: the
+> crew drafts a scene from the writer's intent, extracts every checkable claim,
+> checks it against fact and against what this audience already litigates (both
+> via Parallel), surfaces flags inline on the page, and on the writer's decision
+> either fixes and re-checks, records it as deliberate artistic licence, or
+> escalates it — leaving a provenance record. Agentic Cinema hackathon,
+> **Parallel track**, deadline **2026-09-07 14:00 PT**, judged **Sep 23 – Oct 7**
+> so the deployment must survive into October.
+>
+> The core loop is already built, tested and pushed. Do not rebuild it.
+>
+> **Priorities, in order:**
+> 1. **Deploy to Cloud Run** and get a live public URL. Cloud Run specifically,
+>    not Agent Engine — Cloud Run idles at ~$0 and the service must stay up for
+>    ~9 weeks on a $100 credit. This is the single most overdue item.
+> 2. **Wire the real Parallel key** via Secret Manager once available, and
+>    confirm live verification end to end.
+> 3. **Swap the ledger to BigQuery** (`BIGQUERY_DATASET`) so the audit trail is
+>    durable — this is what satisfies the "updating dynamic databases"
+>    production goal.
+> 4. **One Imagen payoff frame** of the corrected scene. Cut it if it threatens
+>    the timeline.
+> 5. **3-minute video** (budget two full days) and the Devpost write-up. The
+>    video is pre-recorded; the hosted URL stays live separately for judges.
+>
+> **Use these skills:** `hackathon-engineering` (keep `docs/ARCHITECTURE.md`,
+> ADRs and a progress log current), `google-agents-cli-deploy` (Cloud Run),
+> `google-agents-cli-adk-code` (ADK patterns), `frontend-design` (UI work),
+> `hackathon-demo-video` and `hackathon-submission` at the end.
+>
+> **Verify, don't trust.** Check APIs against the installed package or official
+> docs. Cheatsheets have been wrong three times on this project: the ADK 2.5
+> graph edge API is a `{route: target}` dict not a 3-tuple;
+> `google.adk.skills.load_skills_from_dir` doesn't exist; and the demo button
+> bug was only caught by driving the real page with Playwright, not by testing
+> the API. Run the UI in a browser before believing it works.
+>
+> **Housekeeping.** No `Co-Authored-By` trailers. One runnable check for
+> non-trivial logic, no heavy test ceremony.
+>
+> **Start by** running the app locally, confirming the loop still works, then
+> proposing the deployment plan. Wait for my go before deploying.
 
-`hackathon-submission` covers the final write-up and diagrams;
-`hackathon-demo-video` covers scripting and assembling the video.
+---
+
+## Running it
+
+```bash
+uv sync
+uv run --with pytest pytest tests/unit -q          # 7 tests
+uv run --with ruff ruff check app tests
+uv run uvicorn app.fast_api_app:app --port 8080    # then open http://localhost:8080
+```
+
+`/api/health` reports whether Parallel is live and which ledger backend is
+active — check it first when something looks wrong.
