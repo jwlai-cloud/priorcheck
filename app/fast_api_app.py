@@ -17,12 +17,14 @@
 from __future__ import annotations
 
 import asyncio
+import hmac
 import json
 import logging
+import os
 import pathlib
 from collections.abc import AsyncIterator, Awaitable, Callable
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
@@ -65,6 +67,62 @@ class DecisionRequest(BaseModel):
     decided_by: str = "writer"
 
 
+# --- access gate ------------------------------------------------------------
+#
+# The URL is public for ~9 weeks of judging, and every run behind it spends real
+# money on Gemini and Parallel. This is a spend gate, not a security boundary:
+# there is nothing here worth stealing, only something worth billing.
+#
+# A cookie rather than a query parameter, because EventSource cannot set headers
+# and a code in the URL would be written to every Cloud Run request log.
+#
+# Unset SCENEROOM_ACCESS_CODE leaves the service open, which is what local
+# development and the tests use.
+
+ACCESS_CODE = os.getenv("SCENEROOM_ACCESS_CODE", "")
+ACCESS_COOKIE = "sr_access"
+
+
+class AccessRequest(BaseModel):
+    code: str = Field(min_length=1, max_length=200)
+
+
+def require_access(request: Request) -> None:
+    """Reject a request that has not presented the access code."""
+    if not ACCESS_CODE:
+        return
+    presented = request.cookies.get(ACCESS_COOKIE, "")
+    if not hmac.compare_digest(presented, ACCESS_CODE):
+        raise HTTPException(401, "This demo needs an access code.")
+
+
+@app.get("/api/access")
+def access_state(request: Request) -> dict:
+    """Whether a code is needed, and whether this browser already has it."""
+    if not ACCESS_CODE:
+        return {"required": False, "unlocked": True}
+    unlocked = hmac.compare_digest(request.cookies.get(ACCESS_COOKIE, ""), ACCESS_CODE)
+    return {"required": True, "unlocked": unlocked}
+
+
+@app.post("/api/access")
+def unlock(req: AccessRequest, response: Response) -> dict:
+    if not ACCESS_CODE:
+        return {"unlocked": True}
+    if not hmac.compare_digest(req.code.strip(), ACCESS_CODE):
+        # Deliberately no detail about why. Same message, every failure.
+        raise HTTPException(401, "That code was not recognised.")
+    response.set_cookie(
+        ACCESS_COOKIE,
+        ACCESS_CODE,
+        max_age=60 * 60 * 24 * 90,  # past the judging window
+        httponly=True,
+        secure=True,
+        samesite="strict",
+    )
+    return {"unlocked": True}
+
+
 @app.get("/api/health")
 def health() -> dict:
     """Also surfaces whether Parallel is live, so a demo can never pass off
@@ -81,7 +139,7 @@ def health() -> dict:
     }
 
 
-@app.post("/api/scenes")
+@app.post("/api/scenes", dependencies=[Depends(require_access)])
 async def create_scene(req: DraftRequest) -> Scene:
     """Draft a scene, then extract and check every claim in it."""
     scene = await orchestrator.draft_scene(
@@ -92,7 +150,7 @@ async def create_scene(req: DraftRequest) -> Scene:
     return await orchestrator.check_claims(scene)
 
 
-@app.post("/api/scenes/demo")
+@app.post("/api/scenes/demo", dependencies=[Depends(require_access)])
 async def create_demo_scene() -> Scene:
     """Load the pinned sample scene. Lets the full loop be demonstrated with no
     API keys; the UI labels it as sample data."""
@@ -112,7 +170,7 @@ def get_scene(scene_id: str) -> Scene:
     return scene
 
 
-@app.post("/api/scenes/{scene_id}/decide")
+@app.post("/api/scenes/{scene_id}/decide", dependencies=[Depends(require_access)])
 async def decide(scene_id: str, req: DecisionRequest) -> Scene:
     """Record the human's decision on one flag, and revise if they chose to fix."""
     scene = get_ledger().get_scene(scene_id)
@@ -186,7 +244,7 @@ async def _stream(make_work: Callable[[RunTracker], Awaitable[Scene]]) -> Stream
 # Deliberately not /api/scenes/stream: FastAPI matches routes in declaration
 # order, so "stream" would be captured by /api/scenes/{scene_id} above and
 # 404 as a missing scene. Verified — it did exactly that.
-@app.get("/api/stream/scene")
+@app.get("/api/stream/scene", dependencies=[Depends(require_access)])
 async def create_scene_stream(
     intent: str,
     project: str = "untitled",
@@ -212,7 +270,7 @@ async def create_scene_stream(
     return await _stream(work)
 
 
-@app.get("/api/stream/scenes/{scene_id}/decide")
+@app.get("/api/stream/scenes/{scene_id}/decide", dependencies=[Depends(require_access)])
 async def decide_stream(
     scene_id: str,
     claim_id: str,

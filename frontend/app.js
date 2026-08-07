@@ -480,6 +480,40 @@ document.querySelectorAll(".example").forEach((b) => {
   };
 });
 
+// --- the door ---------------------------------------------------------------
+// The gate only appears when the deployment sets an access code. Nothing else
+// in the UI knows about it: unlocking sets a cookie the browser sends on every
+// later request, including the SSE stream.
+
+async function checkAccess() {
+  try {
+    const state = await (await fetch("/api/access")).json();
+    if (state.required && !state.unlocked) $("gate").hidden = false;
+  } catch { /* if this fails the API calls will say so themselves */ }
+}
+
+$("gateForm").addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  const code = $("gateCode").value.trim();
+  const err = $("gateError");
+  if (!code) return;
+  const res = await fetch("/api/access", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code }),
+  });
+  if (res.ok) {
+    $("gate").hidden = true;
+    err.hidden = true;
+  } else {
+    err.textContent = "That code was not recognised. Check the submission page.";
+    err.hidden = false;
+    $("gateCode").select();
+  }
+});
+
+checkAccess();
+
 // Health drives the Parallel badge. A demo must never pass fixture data off as
 // live search, so this is stated in the bar at all times.
 fetch("/api/health")

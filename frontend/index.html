@@ -125,6 +125,26 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<!-- Shown only when the deployment sets an access code. Every run behind this
+     URL spends on Gemini and Parallel, so the gate is about cost, not secrecy. -->
+<div class="gate" id="gate" hidden>
+  <form class="gate-card" id="gateForm">
+    <span class="eyebrow">Sceneroom</span>
+    <h1>This demo needs an access code.</h1>
+    <p>
+      Each run drafts a scene with Gemini and checks it against the live web
+      through Parallel, so the room is kept behind a code. Judges: the code is
+      on the submission page.
+    </p>
+    <label class="field">
+      <span>Access code</span>
+      <input id="gateCode" autocomplete="off" autofocus>
+    </label>
+    <button class="btn primary" type="submit">Enter the room</button>
+    <p class="gate-error" id="gateError" hidden></p>
+  </form>
+</div>
+
 <script src="/static/app.js"></script>
 </body>
 </html>

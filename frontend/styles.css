@@ -486,3 +486,26 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
   .crew li.running .mark { animation: none; border-top-color: var(--live); }
   .bridge path { animation: none; }
 }
+
+/* --- access gate ----------------------------------------------------------- */
+/* Not a login. It reads as a stage door: says what is behind it and why it is
+ * shut, rather than demanding a credential with no explanation. */
+
+.gate {
+  position: fixed; inset: 0; z-index: 60;
+  display: grid; place-items: center; padding: 24px;
+  background: color-mix(in srgb, var(--room) 88%, transparent);
+  backdrop-filter: blur(8px);
+}
+.gate[hidden] { display: none; }
+.gate-card {
+  width: min(460px, 100%); padding: 28px 26px 24px;
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 3px;
+  box-shadow: 12px 14px 0 var(--hard), 0 24px 60px rgba(0,0,0,.4);
+}
+.gate-card h1 { font-size: 22px; line-height: 1.25; margin: 10px 0 8px; font-weight: 600; }
+.gate-card p { font-size: 13.5px; color: var(--text-dim); line-height: 1.5; }
+.gate-card .field { margin-top: 18px; }
+.gate-card .btn { width: 100%; margin-top: 14px; justify-content: center; }
+.gate-error { color: var(--flag); font-size: 12.5px; margin-top: 10px; }
+.gate-error[hidden] { display: none; }
