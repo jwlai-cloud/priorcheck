@@ -215,8 +215,10 @@ function sourceList(sources) {
   if (!sources?.length) return "";
   return `<ul class="sources">${sources
     .map(
-      (s) => `<li><span>↗</span><a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>
-              <span class="host">${esc(host(s.url))}</span></li>`,
+      (s) => `<li><span>↗</span
+              ><a class="title" href="${esc(s.url)}" target="_blank" rel="noopener"
+                 title="${esc(s.title)}">${esc(s.title)}</a
+              ><span class="host">${esc(host(s.url))}</span></li>`,
     )
     .join("")}</ul>`;
 }

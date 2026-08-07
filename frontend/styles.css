@@ -402,9 +402,19 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
 .reasoning  { font-size: 13px; color: var(--text-dim); line-height: 1.45; }
 .routed-note { margin-top: 9px; }
 
-.sources { list-style: none; margin-top: 9px; display: grid; gap: 4px; }
-.sources li { font-family: var(--font-mono); font-size: 11px; color: var(--text-dim); display: flex; gap: 7px; }
-.sources .host { color: var(--text-faint); }
+/* A source is a title and its host. Laid out as rows rather than a flex line:
+ * real citation titles are long, and flex was breaking them one word per line
+ * against the host, which made a cited claim look like debris. */
+.sources { list-style: none; margin-top: 9px; display: grid; gap: 6px; }
+.sources li {
+  font-family: var(--font-mono); font-size: 11px; color: var(--text-dim);
+  display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 6px; align-items: start;
+}
+.sources .title {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; line-height: 1.35;
+}
+.sources .host { grid-column: 2; color: var(--text-faint); font-size: 10px; }
 .sources a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--line); }
 .sources a:hover { color: var(--live); }
 
