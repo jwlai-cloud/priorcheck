@@ -16,11 +16,15 @@
 
 from __future__ import annotations
 
+import asyncio
+import json
 import logging
 import pathlib
+from collections.abc import AsyncIterator, Awaitable, Callable
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -29,6 +33,7 @@ from app.config import ENABLE_IMAGE, MODEL, PROJECT_ID
 from app.models import Disposition, Mode, Scene
 from app.services import parallel_client
 from app.services.ledger import get_ledger
+from app.services.runs import CREW, RunTracker
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -46,6 +51,11 @@ class DraftRequest(BaseModel):
     project: str = "untitled"
     setting: str = ""
     mode: Mode = Mode.FICTION
+    bible: str = Field(
+        default="",
+        max_length=20_000,
+        description="Production bible. The Continuity agent checks canon against it.",
+    )
 
 
 class DecisionRequest(BaseModel):
@@ -123,6 +133,109 @@ async def decide(scene_id: str, req: DecisionRequest) -> Scene:
 def provenance(scene_id: str) -> list:
     """The audit trail: what was checked, decided, and why."""
     return get_ledger().revisions(scene_id)
+
+
+# --- Streaming: the crew, while it works ------------------------------------
+#
+# A full pass takes ~30s. Streamed as SSE rather than polled: polling needs a
+# shared run store, and Cloud Run spreads polls across instances, so a poll
+# would often hit an instance that never saw the run. One connection stays with
+# the instance doing the work.
+#
+# EventSource can only issue GETs, so the brief arrives as query parameters.
+
+
+def _sse(event: str, payload: object) -> str:
+    return f"event: {event}\ndata: {json.dumps(jsonable_encoder(payload))}\n\n"
+
+
+async def _stream(make_work: Callable[[RunTracker], Awaitable[Scene]]) -> StreamingResponse:
+    tracker = RunTracker()
+
+    async def run() -> Scene:
+        try:
+            return await make_work(tracker)
+        finally:
+            # Always close, or the client waits on a stream nobody will feed.
+            tracker.close()
+
+    async def events() -> AsyncIterator[str]:
+        task = asyncio.create_task(run())
+        # The crew up front, so the UI can show every agent as pending
+        # immediately instead of growing a list as results trickle in.
+        yield _sse("crew", {"agents": CREW})
+        try:
+            async for step in tracker.drain():
+                yield _sse("step", step)
+            scene = await task
+            yield _sse("scene", scene)
+        except Exception as exc:
+            logger.exception("Streamed run failed")
+            task.cancel()
+            yield _sse("error", {"message": str(exc) or type(exc).__name__})
+
+    return StreamingResponse(
+        events(),
+        media_type="text/event-stream",
+        headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
+    )
+
+
+# Deliberately not /api/scenes/stream: FastAPI matches routes in declaration
+# order, so "stream" would be captured by /api/scenes/{scene_id} above and
+# 404 as a missing scene. Verified — it did exactly that.
+@app.get("/api/stream/scene")
+async def create_scene_stream(
+    intent: str,
+    project: str = "untitled",
+    setting: str = "",
+    mode: Mode = Mode.FICTION,
+    bible: str = "",
+) -> StreamingResponse:
+    """Draft and check a scene, reporting each agent as it runs."""
+
+    async def work(tracker: RunTracker) -> Scene:
+        scene = await orchestrator.draft_scene(
+            intent=intent,
+            project=project,
+            mode=mode,
+            setting=setting,
+            bible=bible,
+            tracker=tracker,
+        )
+        if not scene.text:
+            raise RuntimeError("Scene drafting failed — check model credentials.")
+        return await orchestrator.check_claims(scene, tracker)
+
+    return await _stream(work)
+
+
+@app.get("/api/stream/scenes/{scene_id}/decide")
+async def decide_stream(
+    scene_id: str,
+    claim_id: str,
+    disposition: Disposition,
+    rationale: str = "",
+    decided_by: str = "writer",
+) -> StreamingResponse:
+    """Record a decision. `fixed` revises and re-checks, so it streams too."""
+    scene = get_ledger().get_scene(scene_id)
+    if scene is None:
+        raise HTTPException(404, "No such scene.")
+    if disposition == Disposition.KEEP_DELIBERATE and not rationale.strip():
+        raise HTTPException(400, "A rationale is required to keep this deliberately.")
+
+    async def work(tracker: RunTracker) -> Scene:
+        return await orchestrator.decide(
+            scene=scene,
+            claim_id=claim_id,
+            disposition=disposition,
+            rationale=rationale,
+            decided_by=decided_by,
+            tracker=tracker,
+        )
+
+    return await _stream(work)
 
 
 # --- static UI --------------------------------------------------------------
