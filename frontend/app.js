@@ -49,14 +49,22 @@ function setBusy(on) {
 
 // --- the crew ---------------------------------------------------------------
 
-const MARKS = { running: "▸", done: "✓", skipped: "–", failed: "✕", pending: "○" };
-let crewOrder = [];
+const MARKS = { running: "", done: "✓", skipped: "–", failed: "✕", pending: "○" };
+
+// The roster, so the panel is never empty and the reader can see the whole
+// pipeline before any of it has run.
+const CREW = ["writer", "extractor", "continuity", "verifier", "fandom", "rights", "adjudicator"];
+
+let crewOrder = CREW;
+let runNo = 0;
 const crewState = new Map();
 
-function resetCrew(agents) {
+function resetCrew(agents = CREW, { status = "pending", detail = "", counted = true } = {}) {
   crewOrder = agents;
   crewState.clear();
-  agents.forEach((a) => crewState.set(a, { agent: a, status: "pending", detail: "", ms: 0 }));
+  agents.forEach((a) => crewState.set(a, { agent: a, status, detail, ms: 0 }));
+  if (counted) runNo += 1;
+  $("runLabel").textContent = counted ? `/ run ${String(runNo).padStart(2, "0")}` : "";
   renderCrew();
 }
 
@@ -73,15 +81,23 @@ function applyStep(step) {
   renderCrew();
 }
 
+// mm:ss, because a reviewer reads elapsed time, not a decimal. Under a minute
+// still shows the minute field so the column stays aligned as it ticks past 60.
+function clock(ms) {
+  const s = Math.round(ms / 1000);
+  return `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
+
 function renderCrew() {
-  if (!crewOrder.length) { $("crew").innerHTML = ""; return; }
   $("crew").innerHTML = crewOrder
     .map((name) => {
       const s = crewState.get(name) || { status: "pending" };
-      const time = s.status === "running" ? "" : s.ms ? `${(s.ms / 1000).toFixed(1)}s` : "";
+      // A running agent shows LIVE rather than a timing: the number is not
+      // final yet, and a counter racing upward reads as a stopwatch, not work.
+      const time = s.status === "running" ? "LIVE" : s.ms ? clock(s.ms) : "";
       return `
         <li class="${s.status}">
-          <span class="mark">${MARKS[s.status] || "○"}</span>
+          <span class="mark">${MARKS[s.status] ?? "○"}</span>
           <span class="name">${esc(name)}</span>
           <span class="time">${esc(time)}</span>
           ${s.detail ? `<span class="detail">${esc(s.detail)}</span>` : ""}
@@ -89,11 +105,13 @@ function renderCrew() {
     })
     .join("");
 
-  const done = crewOrder.filter((n) => ["done", "skipped"].includes(crewState.get(n)?.status));
-  const total = crewOrder.reduce((n, a) => n + (crewState.get(a)?.ms || 0), 0);
-  $("runSummary").textContent = done.length === crewOrder.length && total
-    ? `· ${(total / 1000).toFixed(1)}s`
-    : "";
+  const settled = crewOrder.filter((n) => ["done", "skipped"].includes(crewState.get(n)?.status));
+  // Wall clock, not the sum: the three checking agents run concurrently, so
+  // adding their timings would overstate how long the pass actually took.
+  const wall = Math.max(0, ...crewOrder.map((a) => crewState.get(a)?.ms || 0));
+  const serial = ["writer", "extractor"].reduce((n, a) => n + (crewState.get(a)?.ms || 0), 0);
+  $("runSummary").textContent =
+    settled.length === crewOrder.length && wall ? `· ${clock(serial + wall)} total` : "";
 }
 
 // --- streaming --------------------------------------------------------------
@@ -101,6 +119,7 @@ function renderCrew() {
 function run(url, { onScene, working }) {
   if (busy) return;
   setBusy(true);
+  $("crewHead").textContent = "While the crew runs";
   $("crewNote").textContent = working;
   if (stream) stream.close();
   stream = new EventSource(url);
@@ -110,6 +129,7 @@ function run(url, { onScene, working }) {
 
   stream.addEventListener("scene", (e) => {
     stream.close(); stream = null; setBusy(false);
+    $("crewHead").textContent = "The pass is done";
     $("crewNote").textContent = "Every claim is on the record. Decide what you want to keep.";
     onScene(JSON.parse(e.data));
   });
@@ -118,7 +138,8 @@ function run(url, { onScene, working }) {
     stream.close(); stream = null; setBusy(false);
     let message = "The run stopped. Check the service logs.";
     try { message = JSON.parse(e.data).message || message; } catch { /* transport error */ }
-    $("crewNote").textContent = "The run stopped before it finished.";
+    $("crewHead").textContent = "The run stopped";
+    $("crewNote").textContent = "Nothing was recorded. The brief is still in the rail — run it again.";
     toast(message, true);
   });
 }
@@ -399,20 +420,30 @@ $("demoBtn").onclick = async () => {
   setBusy(true);
   // The sample scene is pinned, so no agent runs for it. Showing a crew list
   // here would imply work that did not happen.
-  resetCrew([]);
+  // The sample scene is pinned, so no agent runs for it. The roster still shows
+  // — an empty panel reads as a missing feature — but every row says skipped,
+  // never done, because claiming work that did not happen is the one thing this
+  // product cannot do.
+  resetCrew(CREW, { status: "skipped", detail: "pinned sample — not run", counted: false });
+  $("crewHead").textContent = "Sample scene";
   $("crewNote").textContent = "Loading the pinned sample scene.";
   try {
     const res = await fetch("/api/scenes/demo", { method: "POST" });
     if (!res.ok) throw new Error(`Sample scene failed (${res.status})`);
     renderScene(await res.json());
+    $("crewHead").textContent = "The crew did not run for this";
     $("crewNote").textContent =
-      "Pinned sample scene, checked against fixed sources. Run the crew to see it work live.";
+      "Pinned sample with fixed sources, so the loop works without an API key. Give a brief and run the crew to watch it live.";
   } catch (err) {
     toast(err.message, true);
   } finally {
     setBusy(false);
   }
 };
+
+// Draw the roster before anything has run, so the pipeline is legible at rest
+// and the panel never looks like a feature that failed to load.
+resetCrew(CREW, { status: "pending", detail: "", counted: false });
 
 // --- room lighting ----------------------------------------------------------
 // Persisted, because a reviewer who chose daylight once meant it. Falls back to

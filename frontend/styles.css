@@ -278,15 +278,25 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
 
 /* --- crew ----------------------------------------------------------------- */
 
+.crew-intro { color: var(--text-dim); font-size: 13px; line-height: 1.45; margin: 8px 0 14px; }
+
 .crew { list-style: none; }
 .crew li {
-  display: grid; grid-template-columns: 16px 1fr auto; gap: 10px; align-items: baseline;
-  padding: 9px 0; border-bottom: 1px solid var(--line-soft); font-size: 12px;
+  display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid var(--line-soft);
 }
-.crew .mark { color: var(--text-faint); }
-.crew .name { color: var(--text-dim); letter-spacing: .06em; text-transform: capitalize; }
-.crew .detail { grid-column: 2 / -1; color: var(--text-faint); font-size: 11px; font-family: var(--font-body); line-height: 1.35; }
-.crew .time { color: var(--text-faint); font-size: 11px; font-variant-numeric: tabular-nums; }
+.crew .mark { color: var(--text-faint); font-size: 12px; }
+/* The agent's name is the thing being read, so it is body-sized and serif —
+ * the detail beneath it is the instrument reading, so it stays mono. */
+.crew .name {
+  font-family: var(--font-body); font-size: 15px; letter-spacing: 0;
+  text-transform: capitalize; color: var(--text-dim);
+}
+.crew .detail {
+  grid-column: 2 / -1; color: var(--text-faint); font-size: 11px;
+  font-family: var(--font-mono); line-height: 1.4;
+}
+.crew .time { color: var(--text-faint); font-size: 11px; font-variant-numeric: tabular-nums; letter-spacing: .06em; }
 .crew li.done .mark { color: var(--live); }
 .crew li.done .name { color: var(--text); }
 .crew li.skipped { opacity: .55; }
@@ -301,11 +311,21 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
   border: 2px solid var(--live); border-top-color: transparent; border-radius: 50%;
   animation: spin .9s linear infinite;
 }
-.crew li.running .time::after { content: '…'; }
+.crew li.running .time { color: var(--live); font-weight: 700; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+.run-label { color: var(--text-dim); letter-spacing: .12em; }
 .run-summary { color: var(--text-faint); letter-spacing: .04em; text-transform: none; font-weight: 400; }
-.aside { margin-top: 14px; padding: 10px 12px; border-left: 2px solid var(--line); color: var(--text-faint); font-size: 12px; line-height: 1.45; }
+
+/* The answer to "is it stuck?", boxed so it reads as a statement rather than
+ * a caption someone forgot to delete. */
+.wait-card {
+  margin-top: 18px; padding: 12px 13px;
+  border: 1px solid var(--line); border-radius: 3px;
+  background: color-mix(in srgb, var(--panel-2) 70%, transparent);
+}
+.wait-card strong { display: block; font-size: 13px; color: var(--text); margin-bottom: 4px; }
+.wait-card p { font-size: 12.5px; color: var(--text-dim); line-height: 1.45; }
 
 /* --- the page ------------------------------------------------------------- */
 
