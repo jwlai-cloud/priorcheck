@@ -22,7 +22,9 @@ on the submission page · revision `sceneroom-00010-7gm`
 | Access gate | cookie-based, guards the five endpoints that spend money |
 | One payoff frame | `gemini-3.1-flash-image`, only once nothing is open |
 | Tests | 30 unit, ruff clean |
-| Docs | `ARCHITECTURE.md`, 6 ADRs, agent topology diagram |
+| Docs | `ARCHITECTURE.md`, 6 ADRs, topology diagram, `SUBMISSION.md`, `VIDEO.md` |
+| Recent scenes + record export | reopen past work; download the provenance record |
+| Continuity actually fires | the bible example produces canon claims |
 
 Verified by driving the deployed page in a browser, not by reading code: a live
 run streams all seven agents, produces cited verdicts including `contradicted`
@@ -32,8 +34,8 @@ and `contested`, records the decision to BigQuery, and renders the frame.
 
 | | Notes |
 |---|---|
-| **3-minute video** | Budget two full days. Pre-recorded; the URL stays live separately. |
-| **Devpost write-up** | Draft in `docs/SUBMISSION.md`. |
+| **3-minute video** | Shot plan in `docs/VIDEO.md`. Recording is yours — budget two days. |
+| **Devpost write-up** | Written: `docs/SUBMISSION.md`. Paste and submit. |
 | Verification quality | `pro` processor + tightened objectives landed. Still conservative — an eval set would turn "it feels better" into a number. |
 | Named escalation human | UI says "Standards desk". A real name would land better on video. |
 
