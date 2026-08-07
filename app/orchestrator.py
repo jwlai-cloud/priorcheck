@@ -160,10 +160,14 @@ async def load_demo_scene(project: str = "demo", mode: Mode = Mode.FICTION) -> S
 
 async def extract_claims(scene: Scene, tracker: RunTracker | None = None) -> list[Claim]:
     """Step 2: pull out everything checkable."""
+    # The bible goes to the Extractor as well as to Continuity: an extractor
+    # that has never seen the bible cannot know which details are canon, so
+    # Continuity would be handed nothing to check and skip every time.
     prompt = (
         f"Setting: {scene.setting}\n"
         f"Production type: {scene.mode.value}\n\n"
-        f"Scene:\n{scene.text}"
+        + (f"Production bible:\n{scene.bible}\n\n" if scene.bible.strip() else "")
+        + f"Scene:\n{scene.text}"
     )
     async with _step(tracker, "extractor") as step:
         out = await run_agent(build_extractor(), prompt)

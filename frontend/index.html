@@ -71,7 +71,17 @@
         <span class="eyebrow">Try one</span>
         <button class="example" data-intent="A detective loses her badge in a rain-soaked alley" data-setting="Seoul, 1963">Seoul, 1963 — a detective loses her badge</button>
         <button class="example" data-intent="A scholar notices a court record has been altered, and must decide whether to say so" data-setting="Joseon, 1443">Joseon, 1443 — a scholar spots an altered record</button>
+        <button class="example"
+          data-intent="Detective Park corners the informant she has been chasing since episode three, and has to decide whether to draw her weapon"
+          data-setting="Seoul, 1963"
+          data-bible="DETECTIVE PARK SUN-HEE carries a service revolver, never an automatic. She was issued badge 1887 in 1961 and has never lost it.&#10;The Jongno precinct has no radio room; all dispatch runs through the Euljiro switchboard.&#10;Episode 3 established that Park does not smoke.">Seoul, 1963 — with a production bible (wakes Continuity)</button>
       </div>
+    </section>
+
+    <section class="panel recent-panel">
+      <h2 class="eyebrow">Recent scenes <span class="hint" id="recentCount"></span></h2>
+      <ol class="recent" id="recent"></ol>
+      <p class="hint" id="recentEmpty">Scenes you run are kept in the ledger and listed here.</p>
     </section>
 
     <section class="panel crew-panel">
@@ -126,7 +136,10 @@
     <span class="hint">append-only</span>
   </div>
   <div class="ledger-entries" id="ledger"></div>
-  <div class="ledger-target hint" id="ledgerTarget"></div>
+  <div class="ledger-actions">
+    <a class="btn" id="recordBtn" hidden download>Download the record</a>
+    <span class="ledger-target hint" id="ledgerTarget"></span>
+  </div>
 </footer>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>

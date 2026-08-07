@@ -235,6 +235,31 @@ class BigQueryLedger(InMemoryLedger):
         super().save_scene(scene)  # warm the cache; do not re-write to BigQuery
         return scene
 
+    def list_scenes(self) -> list[Scene]:
+        """Most recent snapshot per scene, newest first.
+
+        Read from BigQuery rather than memory: the point of the list is the work
+        this browser did *not* do on this instance.
+        """
+        # A window function, not a correlated subquery: an unqualified
+        # `scene_id` inside the subquery bound to the subquery's own table, so
+        # the predicate was always true and MAX ran over the whole table —
+        # which returned exactly one scene, always.
+        rows = self._query(
+            "SELECT payload FROM ("
+            "  SELECT payload, ROW_NUMBER() OVER ("
+            "    PARTITION BY scene_id ORDER BY recorded_at DESC) AS rn, recorded_at"
+            f"  FROM `{self._scenes_table}`"
+            ") WHERE rn = 1 ORDER BY recorded_at DESC LIMIT 50"
+        )
+        out: list[Scene] = []
+        for r in rows:
+            try:
+                out.append(Scene.model_validate_json(r["payload"]))
+            except Exception:  # a snapshot from an older model shape
+                continue
+        return out or super().list_scenes()
+
     def revisions(self, scene_id: str) -> list[RevisionEntry]:
         local = super().revisions(scene_id)
         if local:

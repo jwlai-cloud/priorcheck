@@ -521,3 +521,20 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
   box-shadow: 16px 20px 0 var(--hard), 0 24px 56px rgba(0,0,0,.32);
 }
 .frame-wrap .hint { margin-top: 8px; text-align: right; }
+
+/* --- recent scenes + record ------------------------------------------------ */
+
+.recent { list-style: none; display: grid; gap: 6px; margin-top: 10px; }
+.recent li button {
+  width: 100%; text-align: left; cursor: pointer; padding: 8px 10px;
+  background: transparent; color: var(--text-dim); font-family: var(--font-body);
+  border: 1px solid var(--line); border-radius: 2px; font-size: 13px;
+  transition: transform .12s, color .15s, border-color .15s;
+}
+.recent li button:hover { color: var(--text); border-color: var(--text-faint); transform: translateX(2px); }
+.recent .when { display: block; font-family: var(--font-mono); font-size: 10px; color: var(--text-faint); margin-top: 3px; letter-spacing: .06em; }
+#recentEmpty[hidden], .recent li[hidden] { display: none; }
+
+.ledger-actions { display: grid; gap: 8px; justify-items: end; align-content: end; }
+.ledger-actions .btn { text-decoration: none; }
+.ledger-actions .btn[hidden] { display: none; }

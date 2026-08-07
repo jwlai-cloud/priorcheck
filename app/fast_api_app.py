@@ -26,7 +26,7 @@ from collections.abc import AsyncIterator, Awaitable, Callable
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, PlainTextResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -216,6 +216,70 @@ async def scene_frame(scene_id: str) -> dict:
 def provenance(scene_id: str) -> list:
     """The audit trail: what was checked, decided, and why."""
     return get_ledger().revisions(scene_id)
+
+
+@app.get("/api/scenes/{scene_id}/record.md")
+def provenance_record(scene_id: str) -> PlainTextResponse:
+    """The provenance record, as a document a person can send.
+
+    This is the artefact the pitch describes: what was checked, against which
+    source, decided by whom, and why. A JSON endpoint is for machines; when a
+    controversy lands somebody has to send a *file* to a lawyer or a broadcaster,
+    so it renders as Markdown.
+    """
+    scene = get_ledger().get_scene(scene_id)
+    if scene is None:
+        raise HTTPException(404, "No such scene.")
+    revisions = get_ledger().revisions(scene_id)
+
+    out = [
+        f"# Provenance record — {scene.setting or scene.project}",
+        "",
+        f"- Scene `{scene.id}`, revision {scene.revision}",
+        f"- Production type: **{scene.mode.value}**",
+        f"- Brief: {scene.intent}",
+        f"- Claims checked: {len(scene.claims)}",
+        "",
+        "## Claims",
+        "",
+    ]
+    for i, c in enumerate(scene.claims, 1):
+        out += [
+            f"### {i}. {c.text}",
+            "",
+            f"- Kind: {c.kind.value} · Verdict: **{c.verdict.value if c.verdict else 'unchecked'}**",
+            f"- Decision: **{c.disposition.value.replace('_', ' ')}**"
+            + (f" — {c.rationale}" if c.rationale else ""),
+        ]
+        if c.needs_human and c.disposition == Disposition.PENDING:
+            out.append(f"- **Awaiting a human:** {c.escalation_reason}")
+        if c.reasoning:
+            out.append(f"- Finding: {c.reasoning}")
+        if c.rights_action:
+            out.append(f"- Clearance ({c.rights_status}): {c.rights_action}")
+        if c.precedent:
+            out.append(f"- Precedent: {c.precedent}")
+        if c.sources:
+            out += ["- Sources:"] + [f"    - [{s.title}]({s.url})" for s in c.sources]
+        out.append("")
+
+    out += ["## Ledger", "", "| rev | what changed | why | decision |", "|---|---|---|---|"]
+    for r in revisions:
+        decision = r.disposition.value.replace("_", " ") if r.disposition else "—"
+        out.append(
+            f"| {r.revision} | {r.what_changed} | {r.why} | {decision} |"
+        )
+    out += ["", "## The scene as it stands", "", "```", scene.text, "```", ""]
+    out.append(
+        "_Sceneroom does not guarantee correctness. It records that no claim "
+        "shipped unreviewed._"
+    )
+
+    return PlainTextResponse(
+        "\n".join(out),
+        media_type="text/markdown; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{scene_id}-record.md"'},
+    )
 
 
 # --- Streaming: the crew, while it works ------------------------------------

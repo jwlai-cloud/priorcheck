@@ -132,6 +132,7 @@ function run(url, { onScene, working }) {
     $("crewHead").textContent = "The pass is done";
     $("crewNote").textContent = "Every claim is on the record. Decide what you want to keep.";
     onScene(JSON.parse(e.data));
+    renderRecent();
   });
 
   stream.addEventListener("error", (e) => {
@@ -163,6 +164,10 @@ function renderScene(next) {
   renderScript();
   renderMargin();
   renderLedger();
+
+  const record = $("recordBtn");
+  record.href = `/api/scenes/${scene.id}/record.md`;
+  record.hidden = false;
 
   // The counter must agree with the Adjudicator, not with a second rule
   // invented in the browser.
@@ -503,8 +508,46 @@ document.querySelectorAll(".example").forEach((b) => {
   b.onclick = () => {
     $("intent").value = b.dataset.intent;
     $("setting").value = b.dataset.setting;
+    // Only the bible example ships one; the others must clear it, or a stale
+    // bible from a previous click would be checked against the wrong scene.
+    $("bible").value = b.dataset.bible || "";
+    if (b.dataset.bible) $("bible").closest("details").open = true;
   };
 });
+
+// --- recent scenes ----------------------------------------------------------
+// The ledger is durable, so work done yesterday — or on another instance — is
+// still here. Without this the product forgets everything the moment you
+// reload, which is what makes a demo feel like a demo.
+
+async function renderRecent() {
+  try {
+    const scenes = await (await fetch("/api/scenes")).json();
+    const list = scenes.filter((s) => s.text).slice(0, 8);
+    $("recentCount").textContent = list.length ? `· ${list.length}` : "";
+    $("recentEmpty").hidden = list.length > 0;
+    $("recent").innerHTML = list
+      .map((s) => {
+        const open = s.claims.filter((c) => c.needs_human && c.disposition === "pending").length;
+        return `<li><button data-scene="${esc(s.id)}">${esc(s.setting || s.project)}
+          <span class="when">${s.claims.length} claims · ${open ? `${open} open` : "all decided"}</span>
+        </button></li>`;
+      })
+      .join("");
+    $("recent").querySelectorAll("[data-scene]").forEach((b) => {
+      b.onclick = async () => {
+        if (busy) return;
+        const res = await fetch(`/api/scenes/${b.dataset.scene}`);
+        if (res.ok) { resetCrew(CREW, { status: "skipped", detail: "reopened from the ledger", counted: false });
+                      $("crewHead").textContent = "Reopened from the ledger";
+                      $("crewNote").textContent = "This scene was checked earlier. Its decisions are on the record below.";
+                      renderScene(await res.json()); }
+      };
+    });
+  } catch { /* the list is a convenience; never block the room on it */ }
+}
+
+renderRecent();
 
 // --- the door ---------------------------------------------------------------
 // The gate only appears when the deployment sets an access code. Nothing else
