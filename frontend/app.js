@@ -133,6 +133,12 @@ function renderScene(next) {
   $("pageRev").textContent = scene.revision > 1 ? `rev. ${scene.revision}` : "first draft";
   $("sceneLabel").textContent = scene.intent || "Scene";
 
+  // The setting, set enormous behind the page, and stamped on the file tab.
+  // Split on the comma so "Seoul, 1963" stacks place over year.
+  const where = scene.setting || scene.project || "";
+  $("watermark").textContent = where.split(/,\s*/).join("\n");
+  $("page").dataset.tab = `${where || "untitled"} · ${scene.mode}`.toUpperCase();
+
   renderScript();
   renderMargin();
   renderLedger();
@@ -168,8 +174,12 @@ function renderScript() {
   for (const h of hits) {
     const decided = h.claim.disposition !== "pending";
     out += esc(text.slice(cursor, h.start));
-    out += `<span class="span ${h.claim.verdict || ""}${decided ? " decided" : ""}"
-                  data-claim="${h.claim.id}">${esc(text.slice(h.start, h.end))}<sup>${h.n}</sup></span>`;
+    // A button, not a span: a flagged line is an actionable control and must be
+    // reachable by keyboard.
+    out += `<button type="button" class="span ${h.claim.verdict || ""}${decided ? " decided" : ""}"
+                  data-claim="${h.claim.id}"
+                  aria-label="Flag ${h.n}: ${esc(h.claim.verdict || "pending")}"
+            >${esc(text.slice(h.start, h.end))}<sup>${h.n}</sup></button>`;
     cursor = h.end;
   }
   out += esc(text.slice(cursor));
@@ -272,7 +282,35 @@ function select(claimId) {
     document.querySelector(`.note[data-note="${selected}"]`)
       ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
+  drawBridge();
 }
+
+// The bridge: a line from the flagged sentence to the note that judges it.
+// Drawn in viewport coordinates against a fixed SVG, so it survives scrolling
+// and resizing without any layout maths of its own.
+function drawBridge() {
+  const svg = $("bridge");
+  const path = svg.querySelector("path");
+  const span = selected && document.querySelector(`.span[data-claim="${selected}"]`);
+  const note = selected && document.querySelector(`.note[data-note="${selected}"]`);
+
+  if (!span || !note || window.innerWidth <= 1180) {
+    svg.classList.remove("active");
+    return;
+  }
+
+  const a = span.getBoundingClientRect();
+  const b = note.getBoundingClientRect();
+  const x1 = a.right + 2, y1 = a.top + a.height / 2;
+  const x2 = b.left - 2,  y2 = b.top + 18;
+  // A flat-ish S-curve: it should read as a drawn annotation, not a wire.
+  const mid = x1 + (x2 - x1) * 0.55;
+  path.setAttribute("d", `M ${x1} ${y1} C ${mid} ${y1}, ${mid} ${y2}, ${x2} ${y2}`);
+  svg.classList.add("active");
+}
+
+addEventListener("resize", drawBridge);
+addEventListener("scroll", drawBridge, true);
 
 function renderLedger() {
   fetch(`/api/scenes/${scene.id}/provenance`)
@@ -375,6 +413,32 @@ $("demoBtn").onclick = async () => {
     setBusy(false);
   }
 };
+
+// --- room lighting ----------------------------------------------------------
+// Persisted, because a reviewer who chose daylight once meant it. Falls back to
+// the operating system's preference on a first visit rather than assuming dark.
+
+function setTheme(name) {
+  document.documentElement.dataset.theme = name;
+  document.querySelectorAll(".theme-btn").forEach((b) =>
+    b.setAttribute("aria-pressed", String(b.dataset.theme === name)));
+  try { localStorage.setItem("sceneroom-theme", name); } catch { /* private mode */ }
+  drawBridge();
+}
+
+document.querySelectorAll(".theme-btn").forEach((b) => {
+  b.onclick = () => setTheme(b.dataset.theme);
+});
+
+// Night by default, regardless of the operating system's preference: the room
+// is the designed state, and a first-time visitor should see it. A saved choice
+// always wins, because choosing daylight once meant it.
+setTheme(
+  (() => {
+    try { return localStorage.getItem("sceneroom-theme") || "night"; }
+    catch { return "night"; }
+  })(),
+);
 
 document.querySelectorAll(".example").forEach((b) => {
   b.onclick = () => {

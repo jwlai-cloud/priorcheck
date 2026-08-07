@@ -11,12 +11,29 @@
 </head>
 <body>
 
+<!-- Atmosphere: the room the console sits in. CSS-only, so it ships in the
+     container with no asset to fetch. The Imagen payoff frame drops in here
+     later as a plate behind the same overlay. -->
+<div class="atmosphere" aria-hidden="true"></div>
+
+<!-- The setting, set enormous and nearly invisible behind the page. It is the
+     one piece of display type in the room, and it says where you are. -->
+<div class="watermark" id="watermark" aria-hidden="true"></div>
+
+<!-- Drawn between a flagged span and its margin note when either is selected. -->
+<svg class="bridge" id="bridge" aria-hidden="true"><path/></svg>
+
 <header class="bar">
   <div class="bar-left">
     <span class="wordmark">SCENEROOM</span>
     <span class="crumb" id="crumb">no scene yet</span>
   </div>
   <div class="bar-right">
+    <div class="themes" role="group" aria-label="Room lighting">
+      <button class="theme-btn" data-theme="night"    aria-pressed="true">Night</button>
+      <button class="theme-btn" data-theme="daylight" aria-pressed="false">Daylight</button>
+      <button class="theme-btn" data-theme="contrast" aria-pressed="false">Contrast</button>
+    </div>
     <span class="pill" id="parallelPill" title="Whether checks hit the live web">
       <i class="dot"></i><span id="parallelText">checking…</span>
     </span>
