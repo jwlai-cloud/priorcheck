@@ -11,10 +11,9 @@
 
 const $ = (id) => document.getElementById(id);
 
-// Who contested claims are routed to. A real deployment reads this from the
-// production's standards desk; the demo names a role so the handoff is concrete
-// rather than "a human somewhere".
-const ROUTED_TO = "Standards desk";
+// Who contested claims are routed to. Served by /api/health so a deployment can
+// name its own desk; a role reads as a placeholder, a named person is the point.
+let ROUTED_TO = "Standards desk";
 
 let scene = null;
 let busy = false;
@@ -641,5 +640,9 @@ fetch("/api/health")
     // The real target, reported by the service — never a hardcoded string that
     // could claim durability the deployment does not have.
     $("ledgerTarget").textContent = h.ledger_target || h.ledger;
+    if (h.escalation_contact) {
+      ROUTED_TO = h.escalation_contact;
+      if (scene) renderMargin();   // a scene rendered before health returned
+    }
   })
   .catch(() => { $("parallelText").textContent = "status unknown"; });

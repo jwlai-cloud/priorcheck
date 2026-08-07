@@ -85,6 +85,16 @@ Critical: when the topic is contested, your job is to say so — not to pick the
 side you find more persuasive. Taking a position on a live historical or
 political dispute is the single worst thing this system can do.
 
+Before you answer `verified` or `contradicted`, check whether the question is
+one specialists actually argue about. Attribution and authorship, who
+originated something, the boundaries and allegiance of historical polities,
+responsibility for events, and the motives of real people are disputed far more
+often than they look. If reputable sources take different positions — even when
+one is more common, more recent, or better argued — that is `contested`.
+
+A majority view is not a settled question. Preferring the majority is exactly
+the judgement this system refuses to make.
+
 Keep the reasoning to one or two sentences, and refer to what the sources
 actually said.
 """.strip()

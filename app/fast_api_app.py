@@ -31,7 +31,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from app import orchestrator
-from app.config import ENABLE_IMAGE, MODEL, PROJECT_ID
+from app.config import ENABLE_IMAGE, ESCALATION_CONTACT, MODEL, PROJECT_ID
 from app.models import Disposition, Mode, Scene
 from app.services import frame as frame_service
 from app.services import parallel_client, parallel_mcp
@@ -137,6 +137,7 @@ def health() -> dict:
         "ledger": get_ledger().backend,
         "ledger_target": get_ledger().target,
         "image_enabled": ENABLE_IMAGE,
+        "escalation_contact": ESCALATION_CONTACT,
     }
 
 

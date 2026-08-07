@@ -44,3 +44,8 @@ MODEL = os.getenv("SCENEROOM_MODEL", "gemini-flash-latest")
 # models the project can actually see.
 IMAGE_MODEL = os.getenv("SCENEROOM_IMAGE_MODEL", "gemini-3.1-flash-image")
 ENABLE_IMAGE = os.getenv("SCENEROOM_ENABLE_IMAGE", "true").lower() == "true"
+
+# Who a contested claim is routed to. A role reads as a placeholder; a named
+# person is the point — the product's claim is "get a consultant", not "file a
+# ticket". Configurable because every production has a different desk.
+ESCALATION_CONTACT = os.getenv("SCENEROOM_ESCALATION_CONTACT", "Standards desk")
