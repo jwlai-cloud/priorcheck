@@ -33,6 +33,7 @@ from pydantic import BaseModel, Field
 from app import orchestrator
 from app.config import ENABLE_IMAGE, MODEL, PROJECT_ID
 from app.models import Disposition, Mode, Scene
+from app.services import frame as frame_service
 from app.services import parallel_client, parallel_mcp
 from app.services.ledger import get_ledger
 from app.services.runs import CREW, RunTracker
@@ -187,6 +188,28 @@ async def decide(scene_id: str, req: DecisionRequest) -> Scene:
         rationale=req.rationale,
         decided_by=req.decided_by,
     )
+
+
+@app.post("/api/scenes/{scene_id}/frame", dependencies=[Depends(require_access)])
+async def scene_frame(scene_id: str) -> dict:
+    """One Imagen frame of the signed-off scene — the demo's full stop.
+
+    Returned straight to the browser rather than stored: the frame is a payoff,
+    not provenance, and a megabyte of base64 has no business in the ledger.
+    """
+    if not ENABLE_IMAGE:
+        raise HTTPException(404, "Image generation is switched off.")
+    scene = get_ledger().get_scene(scene_id)
+    if scene is None:
+        raise HTTPException(404, "No such scene.")
+    if scene.open_flags:
+        # The frame is of the scene that was signed off. Rendering one with
+        # flags still open would picture a scene nobody approved.
+        raise HTTPException(409, "Decide the open flags first — the frame is of the signed-off scene.")
+    data_url = await frame_service.render(scene)
+    if data_url is None:
+        raise HTTPException(502, "The frame could not be rendered.")
+    return {"frame": data_url}
 
 
 @app.get("/api/scenes/{scene_id}/provenance")

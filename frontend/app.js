@@ -172,6 +172,12 @@ function renderScene(next) {
     ? `${open} flag${open > 1 ? "s" : ""} need${open > 1 ? "" : "s"} a decision`
     : "every claim is on the record";
   counter.classList.toggle("clear", open === 0);
+
+  // The frame is of the scene that was signed off, so it is only offered once
+  // nothing is still waiting on a person.
+  const settled = scene.claims.length > 0 && open === 0;
+  $("frameBtn").hidden = !settled;
+  if (!settled) { $("frameWrap").hidden = true; }
 }
 
 // Wrap each claim's excerpt where it appears in the scene. Excerpts come back
@@ -415,6 +421,26 @@ $("go").onclick = () => {
     working: "Drafting, then checking every claim in it. About half a minute.",
     onScene: renderScene,
   });
+};
+
+$("frameBtn").onclick = async () => {
+  if (!scene || busy) return;
+  const btn = $("frameBtn");
+  btn.disabled = true;
+  btn.textContent = "Rendering…";
+  try {
+    const res = await fetch(`/api/scenes/${scene.id}/frame`, { method: "POST" });
+    if (!res.ok) throw new Error((await res.json()).detail || "The frame could not be rendered.");
+    const { frame } = await res.json();
+    $("frameImg").src = frame;
+    $("frameWrap").hidden = false;
+    btn.hidden = true;
+    $("frameImg").scrollIntoView({ block: "nearest", behavior: "smooth" });
+  } catch (err) {
+    toast(err.message, true);
+    btn.disabled = false;
+    btn.textContent = "Render the frame";
+  }
 };
 
 $("demoBtn").onclick = async () => {

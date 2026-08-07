@@ -509,3 +509,15 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
 .gate-card .btn { width: 100%; margin-top: 14px; justify-content: center; }
 .gate-error { color: var(--flag); font-size: 12.5px; margin-top: 10px; }
 .gate-error[hidden] { display: none; }
+
+/* --- the payoff frame ------------------------------------------------------ */
+/* Sits above the page, the width of the page, so it reads as the scene rather
+ * than as a feature panel. Hidden until every flag has been decided. */
+
+.frame-wrap { max-width: 720px; margin: 0 auto 22px; }
+.frame-wrap[hidden] { display: none; }
+.frame-wrap img {
+  display: block; width: 100%; border: 1px solid var(--paper-edge);
+  box-shadow: 16px 20px 0 var(--hard), 0 24px 56px rgba(0,0,0,.32);
+}
+.frame-wrap .hint { margin-top: 8px; text-align: right; }

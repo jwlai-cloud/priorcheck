@@ -96,7 +96,13 @@
     <div class="stage-head">
       <span class="eyebrow" id="sceneLabel">Give the crew a brief to start.</span>
       <span class="counter" id="counter"></span>
+      <button class="btn" id="frameBtn" hidden>Render the frame</button>
     </div>
+    <div class="frame-wrap" id="frameWrap" hidden>
+      <img id="frameImg" alt="A generated film still of the signed-off scene">
+      <p class="hint">Imagen · one frame of the scene as signed off. A payoff, not a storyboard.</p>
+    </div>
+
     <article class="page" id="page">
       <div class="page-head"><span id="pageSlug">untitled scene</span><span id="pageRev">first draft</span></div>
       <pre class="script" id="script">The scene will appear here, with anything checkable underlined.</pre>

@@ -36,6 +36,11 @@ os.environ.setdefault("GOOGLE_GENAI_USE_VERTEXAI", "True")
 # Flash everywhere: the work is many small structured calls, not deep reasoning.
 MODEL = os.getenv("SCENEROOM_MODEL", "gemini-flash-latest")
 
-# Imagen for the single payoff frame. Cut this before cutting anything else.
-IMAGE_MODEL = os.getenv("SCENEROOM_IMAGE_MODEL", "imagen-4.0-fast-generate-001")
+# The single payoff frame. Cut this before cutting anything else.
+#
+# A Gemini image model rather than imagen-*: the imagen publisher models are not
+# available to this project in any region tried, and generate_images is
+# deprecated in favour of generate_content anyway. Verified by listing the
+# models the project can actually see.
+IMAGE_MODEL = os.getenv("SCENEROOM_IMAGE_MODEL", "gemini-3.1-flash-image")
 ENABLE_IMAGE = os.getenv("SCENEROOM_ENABLE_IMAGE", "true").lower() == "true"

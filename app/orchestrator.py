@@ -188,9 +188,16 @@ async def extract_claims(scene: Scene, tracker: RunTracker | None = None) -> lis
 
 
 async def _check_factual(claim: Claim, scene: Scene) -> None:
+    # Parallel ranks by intent, so the objective says what would settle the
+    # question, not just what the claim is. Naming the kinds of source that
+    # count keeps period claims off marketplace and video listings, which is
+    # what a bare restatement of the claim was returning.
     objective = (
-        f"Establish whether this is accurate for {scene.setting or 'the period'}: "
-        f"{claim.text}"
+        f"Determine whether this is historically accurate for "
+        f"{scene.setting or 'the stated period'}: {claim.text}. "
+        f"Prefer archives, museum and government records, encyclopaedic "
+        f"references, contemporaneous reporting and academic sources. "
+        f"State what was actually the case at that date."
     )
     sources = await parallel_client.search(objective)
     claim.sources = sources
