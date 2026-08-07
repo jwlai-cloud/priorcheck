@@ -253,8 +253,12 @@ function sourceList(sources) {
 }
 
 function renderMargin() {
-  const flagged = scene.claims.filter((c) => c.verdict && c.verdict !== "verified");
-  const shown = flagged.length ? flagged : scene.claims;
+  // Every claim gets a card, not only the flagged ones. The script underlines
+  // all of them, so showing a subset meant clicking a verified line selected
+  // nothing — and a reviewer needs to see what was checked and passed, not just
+  // what failed. Collapsed cards make that cheap.
+  const flagged = scene.claims.filter((c) => c.needs_human && c.disposition === "pending");
+  const shown = scene.claims;
 
   $("margin").innerHTML = shown
     .map((c) => {
@@ -297,24 +301,39 @@ function renderMargin() {
           : `<p class="hint routed-note">${esc(c.escalation_reason || "No decision needed.")}</p>`;
 
       return `
-        <div class="note ${c.verdict || ""}" data-note="${c.id}">
+        <div class="note ${c.verdict || ""}${c.id === selected ? " open" : ""}" data-note="${c.id}">
           <div class="note-head">
             <span class="kind">${n} · ${esc(c.kind)}</span>
             <span class="verdict ${c.verdict || ""}">${esc(c.verdict || "pending")}</span>
           </div>
           <div class="claim-text">${esc(c.text)}</div>
+          <div class="note-body">
           <div class="reasoning">${esc(c.reasoning)}</div>
           ${longText("Precedent", c.precedent, true)}
           ${sourceList(c.sources)}
           ${bible}${rights}${handoff}
           ${acts}
+          </div>
         </div>`;
     })
     .join("");
 
   $("marginNote").textContent = flagged.length
-    ? "One note per flagged span, with its sources and what you decided."
-    : "Nothing flagged. Every claim checked out.";
+    ? `${flagged.length} of ${scene.claims.length} claims need you. Click a card, or a line in the scene.`
+    : "Nothing is waiting on you. Every claim is on the record with its sources.";
+
+  // Open the first flag awaiting a decision: that is the one the reviewer came
+  // here for, and an all-collapsed deck hides the reason the page is flagged.
+  if (!selected) {
+    const first = shown.find((c) => c.needs_human && c.disposition === "pending");
+    if (first) {
+      selected = first.id;
+      const el = $("margin").querySelector(`[data-note="${first.id}"]`);
+      el?.classList.add("open", "selected");
+      document.querySelector(`.span[data-claim="${first.id}"]`)?.classList.add("selected");
+      requestAnimationFrame(drawBridge);
+    }
+  }
 
   $("margin").querySelectorAll("[data-note]").forEach((el) => {
     el.onclick = (ev) => { if (!ev.target.closest("button, a, textarea")) select(el.dataset.note); };
@@ -324,17 +343,27 @@ function renderMargin() {
   });
 }
 
+// One note open at a time. Every flag used to sit expanded, so a scene with six
+// of them ran several screens deep and the reviewer scrolled past the one they
+// had just clicked. Collapsed, the margin is a deck: you can see every flag at
+// once, and the one you selected is the one that is open.
 function select(claimId) {
   selected = selected === claimId ? null : claimId;
   document.querySelectorAll(".span").forEach((el) =>
     el.classList.toggle("selected", el.dataset.claim === selected));
-  document.querySelectorAll(".note").forEach((el) =>
-    el.classList.toggle("selected", el.dataset.note === selected));
+
+  document.querySelectorAll(".note").forEach((el) => {
+    const isIt = el.dataset.note === selected;
+    el.classList.toggle("open", isIt);
+    el.classList.toggle("selected", isIt);
+  });
+
   if (selected) {
     document.querySelector(`.note[data-note="${selected}"]`)
       ?.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
-  drawBridge();
+  // After the reflow, or the line is drawn to where the card used to be.
+  requestAnimationFrame(drawBridge);
 }
 
 // The bridge: a line from the flagged sentence to the note that judges it.

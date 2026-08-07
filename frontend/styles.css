@@ -554,3 +554,47 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
 .long[open] > summary .more::after { content: " · collapse"; color: var(--text-faint); }
 .long-body.em { font-style: italic; }
 .note .sources { max-height: 168px; overflow-y: auto; }
+
+/* --- the deck --------------------------------------------------------------
+ * Flags are a stack of cards, not a column of documents. Collapsed you can see
+ * every flag at once; the selected one opens and lifts to the front. Before
+ * this, six flags ran several screens deep and the reviewer scrolled past the
+ * one they had just clicked on.
+ */
+
+.margin {
+  position: sticky; top: 57px;
+  max-height: calc(100vh - 57px); overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Collapsed: the head and the claim, nothing else. */
+.note .note-body { display: none; }
+.note.open .note-body { display: block; }
+
+.note .claim-text {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  overflow: hidden; margin-bottom: 0;
+}
+.note.open .claim-text { -webkit-line-clamp: unset; margin-bottom: 6px; }
+
+/* A shallow overlap so the column reads as a stack. The open card clears it. */
+.note { margin-bottom: -4px; position: relative; z-index: 1; }
+.note:hover { z-index: 2; }
+.note.open {
+  z-index: 3; margin-bottom: 14px;
+  transform: translateX(-5px);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--live) 40%, transparent),
+              7px 9px 0 var(--hard), 0 16px 40px rgba(0,0,0,.35);
+}
+.note:not(.open) { cursor: pointer; }
+.note:not(.open):hover { transform: translateX(-3px); }
+
+/* A collapsed card still has to say whether it needs you. */
+.note:not(.open).contradicted .verdict,
+.note:not(.open).contested .verdict { opacity: 1; }
+.note:not(.open) .verdict { opacity: .8; }
+
+@media (max-width: 1180px) {
+  .margin { position: static; max-height: none; overflow: visible; }
+}
