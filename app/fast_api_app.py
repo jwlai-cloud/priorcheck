@@ -75,6 +75,7 @@ def health() -> dict:
         "project": PROJECT_ID or None,
         "parallel_live": parallel_client.is_live(),
         "ledger": get_ledger().backend,
+        "ledger_target": get_ledger().target,
         "image_enabled": ENABLE_IMAGE,
     }
 

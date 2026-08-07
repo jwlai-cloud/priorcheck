@@ -486,8 +486,8 @@ fetch("/api/health")
     const pill = $("parallelPill");
     pill.classList.add(h.parallel_live ? "live" : "offline");
     $("parallelText").textContent = h.parallel_live ? "Parallel live" : "Parallel offline — sample sources";
-    $("ledgerTarget").textContent = h.ledger === "bigquery"
-      ? "bigquery://sceneroom.claims"
-      : "in-memory ledger — set BIGQUERY_DATASET to persist";
+    // The real target, reported by the service — never a hardcoded string that
+    // could claim durability the deployment does not have.
+    $("ledgerTarget").textContent = h.ledger_target || h.ledger;
   })
   .catch(() => { $("parallelText").textContent = "status unknown"; });
