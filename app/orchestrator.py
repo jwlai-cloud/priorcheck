@@ -48,7 +48,7 @@ from app.models import (
     Source,
     Verdict,
 )
-from app.services import parallel_client
+from app.services import parallel_client, parallel_mcp
 from app.services.ledger import get_ledger
 from app.services.runner import run_agent
 from app.services.runs import RunTracker, StepStatus
@@ -208,6 +208,42 @@ async def _check_factual(claim: Claim, scene: Scene) -> None:
     out = await run_agent(build_verifier(), prompt)
     claim.verdict = _parse_verdict(out.get("verdict"))
     claim.reasoning = str(out.get("reasoning", ""))
+
+
+async def _check_fandom_via_mcp(claim: Claim, scene: Scene, toolset) -> None:
+    """The agentic path: the Fandom agent searches and reads for itself.
+
+    Precedent is found iteratively — spot a controversy, read what it actually
+    was, trace what it cost the production — so a single fixed query answers the
+    wrong question. This is the one place a model is trusted to choose its own
+    evidence, and it is trusted with "what has been argued about", never with
+    "what is true".
+    """
+    prompt = (
+        f"Subject: {claim.text}\n"
+        f"Setting: {scene.setting}\n"
+        f"Production type: {scene.mode.value}\n\n"
+        f"Research what audiences and critics have objected to in comparable "
+        f"productions, and report documented precedent with the sources you read."
+    )
+    out = await run_agent(build_fandom(tools=[toolset]), prompt)
+
+    claim.precedent = str(out.get("precedent", ""))
+    claim.reasoning = str(out.get("reasoning", ""))
+    claim.sources = [
+        Source(title=str(s.get("title", "")), url=str(s.get("url", "")))
+        for s in (out.get("sources") or [])
+        if s.get("url")
+    ]
+
+    if not claim.sources:
+        # It searched and came back empty-handed. That is an answer, but it is
+        # not evidence of a flashpoint.
+        claim.verdict = Verdict.UNVERIFIABLE
+        claim.reasoning = claim.reasoning or "No documented precedent found."
+        return
+
+    claim.verdict = Verdict.CONTESTED if out.get("is_flashpoint") else Verdict.VERIFIED
 
 
 async def _check_fandom(claim: Claim, scene: Scene) -> None:
@@ -390,9 +426,20 @@ async def check_claims(scene: Scene, tracker: RunTracker | None = None) -> Scene
         "fandom": [c for c in scene.claims if c.kind == ClaimKind.FANDOM],
         "rights": [c for c in scene.claims if c.kind == ClaimKind.RIGHTS],
     }
+    # The Fandom agent gets Parallel's MCP tools when they are available and
+    # falls back to orchestrator-retrieved sources when they are not. The
+    # Verifier never gets them: it must not choose the evidence it is judged on.
+    mcp_toolset = parallel_mcp.build_search_toolset()
+
+    async def fandom_check(claim: Claim, scene: Scene) -> None:
+        if mcp_toolset is not None:
+            await _check_fandom_via_mcp(claim, scene, mcp_toolset)
+        else:
+            await _check_fandom(claim, scene)
+
     checkers = {
         "verifier": _check_factual,
-        "fandom": _check_fandom,
+        "fandom": fandom_check,
         "rights": _check_rights,
     }
 

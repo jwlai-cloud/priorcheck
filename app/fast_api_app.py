@@ -31,7 +31,7 @@ from pydantic import BaseModel, Field
 from app import orchestrator
 from app.config import ENABLE_IMAGE, MODEL, PROJECT_ID
 from app.models import Disposition, Mode, Scene
-from app.services import parallel_client
+from app.services import parallel_client, parallel_mcp
 from app.services.ledger import get_ledger
 from app.services.runs import CREW, RunTracker
 
@@ -74,6 +74,7 @@ def health() -> dict:
         "model": MODEL,
         "project": PROJECT_ID or None,
         "parallel_live": parallel_client.is_live(),
+        "parallel_mcp": parallel_mcp.is_live(),
         "ledger": get_ledger().backend,
         "ledger_target": get_ledger().target,
         "image_enabled": ENABLE_IMAGE,
