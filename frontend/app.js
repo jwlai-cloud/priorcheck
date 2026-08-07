@@ -222,6 +222,24 @@ function renderScript() {
   });
 }
 
+// The Fandom agent writes at length when it finds a real controversy, which is
+// exactly when you want it — but an 80-line note swamps every other flag in the
+// margin. Long text collapses to its first sentences and opens on demand.
+const LONG = 240;
+
+function longText(label, text, italic) {
+  const body = String(text || "").trim();
+  if (!body) return "";
+  const cls = italic ? "reasoning long-body em" : "reasoning long-body";
+  if (body.length <= LONG) return `<div class="${cls}">${esc(body)}</div>`;
+  const head = body.slice(0, LONG).replace(/\s+\S*$/, "");
+  return `<details class="long">
+      <summary><span class="${cls}">${esc(head)}…</span>
+        <span class="more">${esc(label || "Read")} in full</span></summary>
+      <div class="${cls}">${esc(body)}</div>
+    </details>`;
+}
+
 function sourceList(sources) {
   if (!sources?.length) return "";
   return `<ul class="sources">${sources
@@ -246,7 +264,7 @@ function renderMargin() {
       const handoff = c.verdict === "contested"
         ? `<div class="handoff">
              <span class="eyebrow">Sources disagree — the crew will not pick a side</span>
-             ${c.handoff ? `<p>${esc(c.handoff)}</p>` : ""}
+             ${longText("", c.handoff, false)}
              <p class="routed">Routed to <strong>${esc(ROUTED_TO)}</strong> for a human ruling.</p>
            </div>`
         : "";
@@ -286,7 +304,7 @@ function renderMargin() {
           </div>
           <div class="claim-text">${esc(c.text)}</div>
           <div class="reasoning">${esc(c.reasoning)}</div>
-          ${c.precedent ? `<div class="reasoning"><em>${esc(c.precedent)}</em></div>` : ""}
+          ${longText("Precedent", c.precedent, true)}
           ${sourceList(c.sources)}
           ${bible}${rights}${handoff}
           ${acts}

@@ -538,3 +538,19 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
 .ledger-actions { display: grid; gap: 8px; justify-items: end; align-content: end; }
 .ledger-actions .btn { text-decoration: none; }
 .ledger-actions .btn[hidden] { display: none; }
+
+/* --- long findings --------------------------------------------------------- */
+/* A real controversy produces a long note. Collapsed, so one loud flag cannot
+ * bury the three quiet ones under it. */
+
+.long { margin-top: 4px; }
+.long > summary { cursor: pointer; list-style: none; }
+.long > summary::-webkit-details-marker { display: none; }
+.long > summary .more {
+  display: inline-block; margin-top: 4px; font-family: var(--font-mono);
+  font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--live);
+}
+.long[open] > summary > .long-body { display: none; }
+.long[open] > summary .more::after { content: " · collapse"; color: var(--text-faint); }
+.long-body.em { font-style: italic; }
+.note .sources { max-height: 168px; overflow-y: auto; }
