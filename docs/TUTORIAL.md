@@ -7,8 +7,12 @@ our choices you should copy and which you should not.
 Every link goes to the actual documentation we used, not a summary of it. Where
 a doc was wrong or out of date, that is noted, because that happened five times.
 
+**Read this as a page:** [`tutorial.html`](tutorial.html) — navigable, with the
+diagrams linked inline.
+
 **Live:** <https://sceneroom-320877670799.us-central1.run.app> ·
 **Topology:** [`sceneroom-agents.html`](sceneroom-agents.html) ·
+**One pass:** [`sceneroom-run.html`](sceneroom-run.html) ·
 **Decisions:** [`adr/`](adr/)
 
 ---

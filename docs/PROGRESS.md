@@ -22,7 +22,9 @@ on the submission page · revision `sceneroom-00010-7gm`
 | Access gate | cookie-based, guards the five endpoints that spend money |
 | One payoff frame | `gemini-3.1-flash-image`, only once nothing is open |
 | Tests | 30 unit, ruff clean |
-| Docs | `ARCHITECTURE.md`, 7 ADRs, topology diagram, `SUBMISSION.md`, `VIDEO.md`, `TUTORIAL.md` |
+| Docs | `ARCHITECTURE.md`, 7 ADRs, `SUBMISSION.md`, `VIDEO.md` |
+| Teaching artefact | `tutorial.html` — navigable page, + `TUTORIAL.md` |
+| Diagrams | topology + handshake sequence, both 9/9 showcase checks |
 | Revise graph | ✅ ADK `Workflow` — reviser → critic → route, retry once |
 | ADK / scaffold | ✅ 2.6.1, migrated to `agents-cli-manifest.yaml` |
 | Demo video | ✅ 2:54, `tools/video/` rebuilds it in three commands |
