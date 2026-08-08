@@ -37,12 +37,30 @@ and `contested`, records the decision to BigQuery, and renders the frame.
 
 ## Left
 
-| | Notes |
-|---|---|
-| **3-minute video** | v3 cut exists and plays. Awaiting your notes. |
-| **Devpost write-up** | Written: `docs/SUBMISSION.md`. Paste and submit. |
-| Verification quality | `pro` processor + tightened objectives landed. Still conservative — an eval set would turn "it feels better" into a number. |
-| Named escalation human | UI says "Standards desk". A real name would land better on video. |
+**Nothing in the PRD scope line is unbuilt.** Every item — drafting, extraction,
+continuity against a bible, Parallel verification with citations, four-way
+classification, inline flags, accept/override with logged rationale, the revise
+and re-check loop, the BigQuery ledger, contested escalation, one payoff frame,
+a deployed URL — is live and verified in a browser against the deployment.
+
+What remains is not code:
+
+| | Owner | Notes |
+|---|---|---|
+| **Video notes** | you | v3 plays; you said small feedback is coming. Three commands rebuild it. |
+| **Submit to Devpost** | you | `docs/SUBMISSION.md` is written. Access code is in it. |
+| **PR `dev` → `master`** | either | master is protected and 32 commits behind. |
+| Keep the URL alive to Oct 7 | — | Cloud Run idles at ~$0; nothing to do unless it breaks. |
+
+Optional, in the order I would take them if there is time:
+
+1. **A second demo scene** that reliably produces a `contested` verdict, so the
+   video's strongest beat is not left to chance.
+2. **Widen the eval** past 15 claims, and wire `eval compare` between runs so a
+   prompt change cannot regress a case silently.
+3. **Multi-scene continuity** — the Continuity agent already checks a bible;
+   checking scene 12 against scenes 1–11 is the obvious v2 and is filed under
+   "what's next" in the submission, not built.
 
 ## What is deliberately not being built
 
