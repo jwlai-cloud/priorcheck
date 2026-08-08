@@ -35,9 +35,10 @@ import uuid
 from app.agents.adjudicator import build_adjudicator, route
 from app.agents.continuity import build_continuity
 from app.agents.extractor import build_extractor
+from app.agents.reviser_loop import build_revise_loop
 from app.agents.rights import build_rights
 from app.agents.verifier import build_fandom, build_verifier
-from app.agents.writer import build_reviser, build_writer
+from app.agents.writer import build_writer
 from app.models import (
     Claim,
     ClaimKind,
@@ -50,7 +51,7 @@ from app.models import (
 )
 from app.services import parallel_client, parallel_mcp
 from app.services.ledger import get_ledger
-from app.services.runner import run_agent
+from app.services.runner import run_agent, run_agent_state
 from app.services.runs import RunTracker, StepStatus
 
 logger = logging.getLogger(__name__)
@@ -511,14 +512,38 @@ async def decide(
     if disposition == Disposition.FIXED:
         prompt = (
             f"Current scene:\n{scene.text}\n\n"
-            f"Problem: {claim.text}\n"
-            f"What the sources establish: {claim.reasoning}\n\n"
-            f"Revise minimally to correct this."
+            f"Flagged claim: {claim.text}\n"
+            f"What the sources establish: {claim.reasoning}\n"
+            + (f"The production bible says: {claim.bible_says}\n" if claim.bible_says else "")
+            + "\nRevise the scene to correct this, then check your own work."
         )
         async with _step(tracker, "writer") as step:
-            out = await run_agent(build_reviser(), prompt)
-            new_text = out.get("text", "").strip()
-            _detail(step, "revised the scene" if new_text else "no revision produced")
+            # Revise, then check the revision, and try again if it did not land.
+            # Accepting the first non-empty rewrite meant a revision that changed
+            # the wording but not the fact was passed straight into another full
+            # round of live checking, on the writer's time.
+            state = await run_agent_state(build_revise_loop(), prompt)
+            revision = state.get("revision") or {}
+            critique = state.get("critique") or {}
+            new_text = str(revision.get("text", "")).strip()
+            verdict = critique.get("verdict") if isinstance(critique, dict) else None
+            attempts = critique.get("attempts", 1) if isinstance(critique, dict) else 1
+            if not new_text:
+                _detail(step, "no revision produced")
+            else:
+                what = revision.get("what_changed") or "revised the scene"
+                # Say when the critic was still unhappy. A revision that ran out
+                # of attempts is worth knowing about, not worth hiding.
+                suffix = (
+                    f" (critic unsatisfied after {attempts})"
+                    if verdict == "not_fixed"
+                    else f" (accepted on attempt {attempts})"
+                    if attempts > 1
+                    else ""
+                )
+                _detail(step, f"{what}{suffix}")
+            if verdict == "not_fixed":
+                logger.info("Revision accepted after the critic ran out of attempts")
         if new_text:
             scene.text = new_text
             scene.revision += 1

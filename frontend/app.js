@@ -54,6 +54,18 @@ const MARKS = { running: "", done: "✓", skipped: "–", failed: "✕", pending
 // pipeline before any of it has run.
 const CREW = ["writer", "extractor", "continuity", "verifier", "fandom", "rights", "adjudicator"];
 
+// One line each, shown under the name before a run. The names are meaningless
+// to a first-time reader, and "Fandom" is actively misleading without it.
+const CREW_ASKS = {
+  writer:      "turns your brief into a scene",
+  extractor:   "pulls out every checkable claim",
+  continuity:  "checks canon against your bible",
+  verifier:    "is it true? — live web, via Parallel",
+  fandom:      "what has this audience litigated?",
+  rights:      "does using it need permission?",
+  adjudicator: "decides what a human must see",
+};
+
 let crewOrder = CREW;
 let runNo = 0;
 const crewState = new Map();
@@ -94,12 +106,14 @@ function renderCrew() {
       // A running agent shows LIVE rather than a timing: the number is not
       // final yet, and a counter racing upward reads as a stopwatch, not work.
       const time = s.status === "running" ? "LIVE" : s.ms ? clock(s.ms) : "";
+      // Before it runs, say what it is for; afterwards, what it found.
+      const detail = s.detail || (s.status === "pending" ? CREW_ASKS[name] || "" : "");
       return `
         <li class="${s.status}">
           <span class="mark">${MARKS[s.status] ?? "○"}</span>
           <span class="name">${esc(name)}</span>
           <span class="time">${esc(time)}</span>
-          ${s.detail ? `<span class="detail">${esc(s.detail)}</span>` : ""}
+          ${detail ? `<span class="detail${s.detail ? "" : " asks"}">${esc(detail)}</span>` : ""}
         </li>`;
     })
     .join("");

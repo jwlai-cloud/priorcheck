@@ -200,6 +200,27 @@ def run(base: str, headed: bool) -> int:
             page.wait_for_selector(".decided-mark", timeout=300_000)
         d.hold()
 
+        # Clear whatever is still open. The frame is only offered on a scene
+        # with nothing outstanding — it is a frame of the signed-off scene — so
+        # deciding one flag and expecting a frame, as an earlier cut did, films
+        # a button that never appears.
+        for _ in range(6):
+            open_keep = page.locator(".note.open .keep")
+            if not open_keep.count():
+                nxt = page.locator(".note .keep").first
+                if not page.locator(".note .keep").count():
+                    break
+                nxt.click()
+                open_keep = page.locator(".note.open .keep")
+            try:
+                page.locator(".note .keep").first.click()
+                page.wait_for_selector("textarea[id^=rt-]", timeout=8_000)
+                page.fill("textarea[id^=rt-]", "Deliberate period licence.")
+                page.locator("button[id^=rc-]").first.click()
+                page.wait_for_timeout(2500)
+            except Exception:
+                break
+
         # 7 — the ledger, then the record as a document.
         d.beat("ledger")
         page.locator(".ledger").scroll_into_view_if_needed()

@@ -598,3 +598,7 @@ textarea::placeholder, input::placeholder { color: var(--text-faint); }
 @media (max-width: 1180px) {
   .margin { position: static; max-height: none; overflow: visible; }
 }
+
+/* An agent's purpose before it runs, its finding afterwards. The purpose is set
+ * apart so the two are never confused: one is a label, the other is evidence. */
+.crew .detail.asks { font-style: italic; opacity: .75; }
