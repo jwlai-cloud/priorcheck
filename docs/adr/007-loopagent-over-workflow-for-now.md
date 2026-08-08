@@ -29,30 +29,50 @@ Not assumed — probed against the installed package:
   `"not_fixed"` edge and ADK logged *"none were matched by the emitted route(s)
   ... The branch will end."*
 
-## The actual blocker
+## What the probe got wrong
 
-`run_llm_agent_as_node` sets an `LlmAgent` used as a node to
-`mode='single_turn'` and `include_contents='none'`. **A node does not see the
-conversation.** Input arrives as `node_input` — the previous node's output.
+The first reading of this was that a `Workflow` node "cannot see context",
+because `run_llm_agent_as_node` sets an `LlmAgent` node to `mode='single_turn'`
+with `include_contents='none'`, and the probe's reviser returned a placeholder
+saying its context was missing.
 
-That is a cleaner data flow than `LoopAgent`'s shared session state, and it is
-not a drop-in swap:
+Reading the current documentation (adk.dev, not the stale cached copy) corrects
+that:
 
-- The reviser must receive the prompt as workflow input rather than as a user
-  message.
-- The critic's `node_input` would be the reviser's output alone, so the flagged
-  claim and what the sources establish — which is the entire basis for judging
-  the revision — have to move into workflow state with a `state_schema`.
-- `run_agent_state` reads session state after the run; a Workflow's result is
-  threaded through nodes, so the caller changes too.
+- **State does persist across nodes.** The docs list three channels — `output`
+  passes data node to node, `message` is the user-facing response, and `state`
+  is "data automatically persisted across nodes via Events throughout an ADK
+  session". Nothing is lost; the reviser simply was not given its input the way
+  a node receives one.
+- **Routing is not done from inside an LlmAgent.** The idiomatic shape is an
+  LlmAgent that classifies, followed by a plain function node that returns
+  `Event(route=[...])`, with the dict edge dispatching on that. The probe tried
+  to route from a tool on the agent itself and fed the model's free-text verdict
+  in as the key, which is why `"Not Fixed"` never matched `"not_fixed"`.
 
-In the probe, the reviser returned a placeholder saying its context was missing.
-That was the API behaving as designed, not a defect.
+So the port is smaller than it first looked, and it fits this codebase better
+than `LoopAgent` does: the routing decision becomes a deterministic function
+node, which is exactly the argument in ADR 002. The docs describe the point of
+the graph API in those terms — "switching between non-deterministic AI-powered
+agents and deterministic code as needed".
+
+The shape would be:
+
+    Workflow(edges=[
+        (START, reviser, critic),
+        (critic, route_fn),                       # returns Event(route=[...])
+        (route_fn, {"not_fixed": reviser}),       # no edge for "fixed" -> ends
+    ])
+
+with the claim and sources in state, and the scene passed node to node.
 
 ## Decision
 
-Keep the `LoopAgent`. It works, it is covered by tests, and the container pins
-ADK 2.5, so a future removal cannot break the deployment during judging.
+Keep the `LoopAgent` **for this submission**. It works, it is covered by tests,
+and the container pins ADK 2.5, so a future removal cannot break the deployment
+during judging. The port above is understood and small, but it is a rewrite of a
+working path four weeks from a deadline, and nothing about the product improves
+by doing it now.
 
 ## Consequences
 
