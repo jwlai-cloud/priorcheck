@@ -200,25 +200,26 @@ def run(base: str, headed: bool) -> int:
             page.wait_for_selector(".decided-mark", timeout=300_000)
         d.hold()
 
-        # Clear whatever is still open. The frame is only offered on a scene
-        # with nothing outstanding — it is a frame of the signed-off scene — so
-        # deciding one flag and expecting a frame, as an earlier cut did, films
-        # a button that never appears.
-        for _ in range(6):
-            open_keep = page.locator(".note.open .keep")
-            if not open_keep.count():
-                nxt = page.locator(".note .keep").first
-                if not page.locator(".note .keep").count():
-                    break
-                nxt.click()
-                open_keep = page.locator(".note.open .keep")
+        # Clear whatever is still open, so the frame can be offered.
+        #
+        # A card must be opened before its buttons can be clicked: the deck
+        # collapses everything but the selected card, so `.note .keep` exists in
+        # the DOM and is not visible, and clicking it waits forever.
+        for _ in range(8):
+            pending = page.locator(".note:not(:has(.decided-mark)):has(.keep)")
+            if not pending.count():
+                break
+            card = pending.first
             try:
-                page.locator(".note .keep").first.click()
+                card.click()                       # open it
+                page.wait_for_timeout(400)
+                page.locator(".note.open .keep").first.click(timeout=8_000)
                 page.wait_for_selector("textarea[id^=rt-]", timeout=8_000)
                 page.fill("textarea[id^=rt-]", "Deliberate period licence.")
                 page.locator("button[id^=rc-]").first.click()
-                page.wait_for_timeout(2500)
-            except Exception:
+                page.wait_for_timeout(2200)
+            except Exception as exc:
+                print(f"    (stopped clearing: {str(exc)[:80]})")
                 break
 
         # 7 — the ledger, then the record as a document.
@@ -246,10 +247,19 @@ def run(base: str, headed: bool) -> int:
         if btn.count() and btn.is_visible():
             btn.click()
             try:
-                page.wait_for_selector("#frameWrap:not([hidden])", timeout=300_000)
+                # The image, not the container. Waiting on the wrapper returned
+                # before the picture existed and the beat ended on "Rendering...",
+                # which is the one shot in the video that has to land.
+                page.wait_for_function(
+                    "() => { const i = document.getElementById('frameImg');"
+                    "        return i && i.src && i.src.startsWith('data:'); }",
+                    timeout=300_000,
+                )
                 page.locator("#frameImg").scroll_into_view_if_needed()
+                page.wait_for_timeout(3500)   # hold on it; this is the payoff
+                print("    frame rendered")
             except Exception as exc:  # the frame is the first thing we cut
-                print(f"  (frame skipped: {exc})")
+                print(f"    (frame skipped: {str(exc)[:90]})")
         d.hold()
 
         d.beat("close")

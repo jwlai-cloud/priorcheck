@@ -4498,11 +4498,11 @@
         <div class="pulse-dot"></div>
         <h1>Sceneroom — ADK agent topology</h1>
       </div>
-      <p class="subtitle">Seven single-turn Gemini agents on a deterministic Python rail. No agent calls a tool, another agent, or the web.</p>
+      <p class="subtitle">Seven Gemini agents on a deterministic Python rail, plus one ADK LoopAgent where a loop is genuinely the right shape.</p>
     </div>
 
     <script id="archify-guided-views-data" type="application/json">[{"id":"draft-path","label":"Draft and extract","focus":["room","orchestrator","writer","extractor"],"note":"The brief becomes a scene, then the scene becomes a list of checkable claims."},{"id":"evidence-path","label":"Where evidence comes from","focus":["orchestrator","parallel","verifier","fandom","rights"],"note":"The orchestrator retrieves. Agents only judge sources handed to them, so a citation cannot be invented."},{"id":"escalation","label":"Who decides","focus":["adjudicator","orchestrator","ledger"],"note":"Routing is a pure function; the model only writes the handoff note for a contested claim."},{"id":"record","label":"The provenance record","focus":["room","orchestrator","ledger"],"note":"Every verdict, decision and rationale is appended, never edited."}]</script>
-    <script id="archify-source-evidence-data" type="application/json">{"schemaVersion":1,"verified":true,"repository":{"url":"https://github.com/jwlai-cloud/sceneroom","revision":"e833bab42157f175d853cb51eef260e08c8a1279","shortRevision":"e833bab"},"referenceCount":11,"nodes":{"room":[{"path":"frontend/app.js","label":"console + run stream","href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/frontend/app.js"}],"orchestrator":[{"path":"app/orchestrator.py","label":"draft → check → adjudicate","href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/orchestrator.py"}],"writer":[{"path":"app/agents/writer.py","line":65,"href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/writer.py#L65"}],"extractor":[{"path":"app/agents/extractor.py","line":73,"href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/extractor.py#L73"}],"continuity":[{"path":"app/agents/continuity.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/continuity.py"}],"verifier":[{"path":"app/agents/verifier.py","line":102,"href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/verifier.py#L102"}],"fandom":[{"path":"app/agents/verifier.py","line":113,"href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/verifier.py#L113"}],"rights":[{"path":"app/agents/rights.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/rights.py"}],"adjudicator":[{"path":"app/agents/adjudicator.py","line":90,"label":"route() + handoff note","href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/agents/adjudicator.py#L90"}],"parallel":[{"path":"app/services/parallel_client.py","line":45,"href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/services/parallel_client.py#L45"}],"ledger":[{"path":"app/services/ledger.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/e833bab42157f175d853cb51eef260e08c8a1279/app/services/ledger.py"}]}}</script>
+    <script id="archify-source-evidence-data" type="application/json">{"schemaVersion":1,"verified":true,"repository":{"url":"https://github.com/jwlai-cloud/sceneroom","revision":"c771e0430a16a2ac34e397f0bda0bead3cbb8f61","shortRevision":"c771e04"},"referenceCount":12,"nodes":{"room":[{"path":"frontend/app.js","label":"console + run stream","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/frontend/app.js"}],"orchestrator":[{"path":"app/orchestrator.py","label":"draft → check → adjudicate","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/orchestrator.py"}],"writer":[{"path":"app/agents/writer.py","line":65,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/writer.py#L65"}],"extractor":[{"path":"app/agents/extractor.py","line":73,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/extractor.py#L73"}],"continuity":[{"path":"app/agents/continuity.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/continuity.py"}],"verifier":[{"path":"app/agents/verifier.py","line":102,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/verifier.py#L102"}],"fandom":[{"path":"app/agents/verifier.py","line":113,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/verifier.py#L113"}],"rights":[{"path":"app/agents/rights.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/rights.py"}],"adjudicator":[{"path":"app/agents/adjudicator.py","line":90,"label":"route() + handoff note","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/adjudicator.py#L90"}],"parallel":[{"path":"app/services/parallel_client.py","line":45,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/services/parallel_client.py#L45"}],"ledger":[{"path":"app/services/ledger.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/services/ledger.py"}],"reviseloop":[{"path":"app/agents/reviser_loop.py","label":"LoopAgent + escalate","href":"https://github.com/jwlai-cloud/sceneroom/blob/c771e0430a16a2ac34e397f0bda0bead3cbb8f61/app/agents/reviser_loop.py"}]}}</script>
     <div class="guided-views no-print" id="guided-views" hidden aria-label="Guided diagram views">
       <button id="guided-view-prev" type="button" aria-label="Previous guided view" title="Previous guided view ([)">&#8592;</button>
       <div class="guided-view-copy">
@@ -4544,9 +4544,9 @@
 
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read">
-      <svg viewBox="0 0 1050 770" role="img" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
+      <svg viewBox="0 0 1050 862" role="img" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
         <title id="archify-diagram-title">Sceneroom — ADK agent topology</title>
-        <desc id="archify-diagram-description">Seven single-turn Gemini agents on a deterministic Python rail. No agent calls a tool, another agent, or the web.</desc>
+        <desc id="archify-diagram-description">Seven Gemini agents on a deterministic Python rail, plus one ADK LoopAgent where a loop is genuinely the right shape.</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -4570,21 +4570,22 @@
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Boundaries (behind everything) -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" x="534" y="14" width="232" height="688" rx="12" class="c-region" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="region" data-composition-frame-id="0" x="534" y="14" width="232" height="780" rx="12" class="c-region" stroke-width="1"/>
         <text x="542" y="32" class="t-cloud" font-size="9" font-weight="600">Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools</text>
 
         <!-- Connection paths (before components for correct z-order) -->
         <path data-edge-from="room" data-edge-to="orchestrator" data-edge-label="brief" data-edge-key="0" data-edge-id="brief" data-composition-points="190,360;214,360;214,376;256,376;256,353;280,353" d="M 190 360 L 206 360 Q 214 360 214 368 L 214 368 Q 214 376 222 376 L 248 376 Q 256 376 256 368 L 256 361 Q 256 353 264 353 L 280 353" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path data-edge-from="orchestrator" data-edge-to="writer" data-edge-key="1" data-edge-id="draft" data-composition-points="450,334;505,334;505,71;560,71" d="M 450 334 L 497 334 Q 505 334 505 326 L 505 79 Q 505 71 513 71 L 560 71" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="orchestrator" data-edge-to="extractor" data-edge-key="2" data-edge-id="extract" data-composition-points="450,342.6666666666667;505,342.6666666666667;505,163;560,163" d="M 450 342.6666666666667 L 497 342.6666666666667 Q 505 342.6666666666667 505 334.6666666666667 L 505 171 Q 505 163 513 163 L 560 163" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="orchestrator" data-edge-to="continuity" data-edge-key="3" data-edge-id="canon" data-composition-points="450,351.3333333333333;505,351.3333333333333;505,255;560,255" d="M 450 351.3333333333333 L 497 351.3333333333333 Q 505 351.3333333333333 505 343.3333333333333 L 505 263 Q 505 255 513 255 L 560 255" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="orchestrator" data-edge-to="verifier" data-edge-key="4" data-edge-id="verify" data-composition-points="450,360;474,360;474,377;536,377;536,361;560,361" d="M 450 360 L 466 360 Q 474 360 474 368 L 474 369 Q 474 377 482 377 L 528 377 Q 536 377 536 369 L 536 369 Q 536 361 544 361 L 560 361" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="orchestrator" data-edge-to="fandom" data-edge-key="5" data-edge-id="precedent" data-composition-points="450,368.6666666666667;505,368.6666666666667;505,453;560,453" d="M 450 368.6666666666667 L 497 368.6666666666667 Q 505 368.6666666666667 505 376.6666666666667 L 505 445 Q 505 453 513 453 L 560 453" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="orchestrator" data-edge-to="rights" data-edge-key="6" data-edge-id="clearance" data-composition-points="450,377.3333333333333;505,377.3333333333333;505,545;560,545" d="M 450 377.3333333333333 L 497 377.3333333333333 Q 505 377.3333333333333 505 385.3333333333333 L 505 537 Q 505 545 513 545 L 560 545" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="orchestrator" data-edge-to="extractor" data-edge-key="2" data-edge-id="extract" data-composition-points="450,341.42857142857144;505,341.42857142857144;505,163;560,163" d="M 450 341.42857142857144 L 497 341.42857142857144 Q 505 341.42857142857144 505 333.42857142857144 L 505 171 Q 505 163 513 163 L 560 163" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="orchestrator" data-edge-to="continuity" data-edge-key="3" data-edge-id="canon" data-composition-points="450,348.85714285714283;505,348.85714285714283;505,255;560,255" d="M 450 348.85714285714283 L 497 348.85714285714283 Q 505 348.85714285714283 505 340.85714285714283 L 505 263 Q 505 255 513 255 L 560 255" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="orchestrator" data-edge-to="verifier" data-edge-key="4" data-edge-id="verify" data-composition-points="450,356.2857142857143;474,356.2857142857143;474,377;536,377;536,361;560,361" d="M 450 356.2857142857143 L 466 356.2857142857143 Q 474 356.2857142857143 474 364.2857142857143 L 474 369 Q 474 377 482 377 L 528 377 Q 536 377 536 369 L 536 369 Q 536 361 544 361 L 560 361" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="orchestrator" data-edge-to="fandom" data-edge-key="5" data-edge-id="precedent" data-composition-points="450,363.7142857142857;505,363.7142857142857;505,453;560,453" d="M 450 363.7142857142857 L 497 363.7142857142857 Q 505 363.7142857142857 505 371.7142857142857 L 505 445 Q 505 453 513 453 L 560 453" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="orchestrator" data-edge-to="rights" data-edge-key="6" data-edge-id="clearance" data-composition-points="450,371.14285714285717;505,371.14285714285717;505,545;560,545" d="M 450 371.14285714285717 L 497 371.14285714285717 Q 505 371.14285714285717 505 379.14285714285717 L 505 537 Q 505 545 513 545 L 560 545" class="a-default" stroke-width="1.5" marker-end="url(#arrowhead)"/>
         <path data-edge-from="orchestrator" data-edge-to="parallel" data-edge-key="7" data-edge-id="retrieve" data-composition-points="280,367;245,367;245,501;210,501" d="M 280 367 L 253 367 Q 245 367 245 375 L 245 493 Q 245 501 237 501 L 210 501" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="orchestrator" data-edge-to="ledger" data-edge-label="verdicts + decisions" data-edge-key="8" data-edge-id="record" data-composition-points="365,402;365,730;930,730;930,402" d="M 365 402 L 365 722 Q 365 730 373 730 L 922 730 Q 930 730 930 722 L 930 402" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="orchestrator" data-edge-to="ledger" data-edge-label="verdicts + decisions" data-edge-key="8" data-edge-id="record" data-composition-points="365,402;365,830;930,830;930,402" d="M 365 402 L 365 822 Q 365 830 373 830 L 922 830 Q 930 830 930 822 L 930 402" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path data-edge-from="orchestrator" data-edge-to="room" data-edge-label="run events" data-edge-key="9" data-edge-id="stream" data-composition-points="365,318;365,294;115,294;115,318" d="M 365 318 L 365 302 Q 365 294 357 294 L 123 294 Q 115 294 115 302 L 115 318" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="orchestrator" data-edge-to="adjudicator" data-edge-key="10" data-edge-id="adjudicate" data-composition-points="450,386;505,386;505,651;560,651" d="M 450 386 L 497 386 Q 505 386 505 394 L 505 643 Q 505 651 513 651 L 560 651" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="orchestrator" data-edge-to="adjudicator" data-edge-key="10" data-edge-id="adjudicate" data-composition-points="450,378.57142857142856;505,378.57142857142856;505,651;560,651" d="M 450 378.57142857142856 L 497 378.57142857142856 Q 505 378.57142857142856 505 386.57142857142856 L 505 643 Q 505 651 513 651 L 560 651" class="a-security" stroke-width="1.5" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="orchestrator" data-edge-to="reviseloop" data-edge-key="11" data-edge-id="revise" data-composition-points="450,386;505,386;505,743;560,743" d="M 450 386 L 497 386 Q 505 386 505 394 L 505 735 Q 505 743 513 743 L 560 743" class="a-dashed" stroke-width="1.5" marker-end="url(#arrowhead-dashed)"/>
 
         <!-- Components -->
         <g id="node-room" data-node-id="room" data-node-label="Scene room UI" tabindex="0" role="button" aria-label="Focus Scene room UI, inline flags · SSE stream, Architecture component" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="inline flags · SSE stream" data-node-tag="EventSource" data-node-context="Architecture component">
@@ -4614,15 +4615,15 @@
         <text data-detail="fine" x="365" y="394" class="t-backend" font-size="7" text-anchor="middle">the only caller</text>
         </g>
 
-        <g id="node-writer" data-node-id="writer" data-node-label="Writer / Reviser" tabindex="0" role="button" aria-label="Focus Writer / Reviser, intent → scene, and applies fixes, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="intent → scene, and applies fixes" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
-          <title>Writer / Reviser · intent → scene, and applies fixes · Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools</title>
+        <g id="node-writer" data-node-id="writer" data-node-label="Writer" tabindex="0" role="button" aria-label="Focus Writer, intent -&gt; scene, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="intent -&gt; scene" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
+          <title>Writer · intent -&gt; scene · Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools</title>
           <rect x="560" y="40" width="180" height="62" rx="6" class="c-mask"/>
           <rect x="560" y="40" width="180" height="62" rx="6" class="c-cloud" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(566 46) scale(0.6875)">
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
-          <text data-detail-anchor x="650" y="69" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Writer / Reviser</text>
-        <text data-detail="context" x="650" y="85" class="t-muted" font-size="9" text-anchor="middle">intent → scene, and applies fixes</text>
+          <text data-detail-anchor x="650" y="69" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Writer</text>
+        <text data-detail="context" x="650" y="85" class="t-muted" font-size="9" text-anchor="middle">intent -&gt; scene</text>
         </g>
 
         <g id="node-extractor" data-node-id="extractor" data-node-label="Extractor" tabindex="0" role="button" aria-label="Focus Extractor, scene → claims with excerpts, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="scene → claims with excerpts" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
@@ -4719,6 +4720,18 @@
         <text data-detail="fine" x="930" y="394" class="t-database" font-size="7" text-anchor="middle">BigQuery on env</text>
         </g>
 
+        <g id="node-reviseloop" data-node-id="reviseloop" data-node-label="Revise loop" tabindex="0" role="button" aria-label="Focus Revise loop, reviser -&gt; critic, until the fix lands, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="reviser -&gt; critic, until the fix lands" data-node-tag="ADK LoopAgent" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
+          <title>Revise loop · reviser -&gt; critic, until the fix lands · Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools · ADK LoopAgent</title>
+          <rect x="560" y="712" width="180" height="62" rx="6" class="c-mask"/>
+          <rect x="560" y="712" width="180" height="62" rx="6" class="c-cloud" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(566 718) scale(0.6875)">
+            <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
+          </g>
+          <text data-detail-anchor x="650" y="741" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Revise loop</text>
+        <text data-detail="context" x="650" y="757" class="t-muted" font-size="9" text-anchor="middle">reviser -&gt; critic, until the fix lands</text>
+        <text data-detail="fine" x="650" y="766" class="t-cloud" font-size="7" text-anchor="middle">ADK LoopAgent</text>
+        </g>
+
         <!-- Connection labels -->
         <g data-detail="context" data-edge-from="room" data-edge-to="orchestrator" data-edge-label="brief" data-edge-key="0" data-edge-id="brief">
           <rect x="197" y="348" width="34" height="14" rx="3" class="c-mask"/>
@@ -4732,8 +4745,8 @@
 
 
         <g data-detail="context" data-edge-from="orchestrator" data-edge-to="ledger" data-edge-label="verdicts + decisions" data-edge-key="8" data-edge-id="record">
-          <rect x="594.5" y="710" width="106" height="14" rx="3" class="c-mask"/>
-          <text x="647.5" y="720" class="t-backend" font-size="8" text-anchor="middle">verdicts + decisions</text>
+          <rect x="594.5" y="810" width="106" height="14" rx="3" class="c-mask"/>
+          <text x="647.5" y="820" class="t-backend" font-size="8" text-anchor="middle">verdicts + decisions</text>
         </g>
         <g data-detail="context" data-edge-from="orchestrator" data-edge-to="room" data-edge-label="run events" data-edge-key="9" data-edge-id="stream">
           <rect x="211" y="274" width="58" height="14" rx="3" class="c-mask"/>
@@ -4741,28 +4754,29 @@
         </g>
 
 
+
         <!-- Legend -->
         <g data-legend-bridge>
-          <text x="40" y="741" class="t-primary" font-size="9" font-weight="600">Legend</text>
+          <text x="40" y="833" class="t-primary" font-size="9" font-weight="600">Legend</text>
           <g data-legend-kind="frontend">
-            <rect x="40" y="746" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
-            <text x="60" y="754" class="t-muted" font-size="8">Frontend</text>
+            <rect x="40" y="838" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="60" y="846" class="t-muted" font-size="8">Frontend</text>
           </g>
           <g data-legend-kind="backend">
-            <rect x="144" y="746" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="164" y="754" class="t-muted" font-size="8">Backend</text>
+            <rect x="144" y="838" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="164" y="846" class="t-muted" font-size="8">Backend</text>
           </g>
           <g data-legend-kind="cloud">
-            <rect x="243" y="746" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
-            <text x="263" y="754" class="t-muted" font-size="8">Cloud</text>
+            <rect x="243" y="838" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
+            <text x="263" y="846" class="t-muted" font-size="8">Cloud</text>
           </g>
           <g data-legend-kind="external">
-            <rect x="332" y="746" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-            <text x="352" y="754" class="t-muted" font-size="8">External</text>
+            <rect x="332" y="838" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+            <text x="352" y="846" class="t-muted" font-size="8">External</text>
           </g>
           <g data-legend-kind="database">
-            <rect x="436" y="746" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-            <text x="456" y="754" class="t-muted" font-size="8">Database</text>
+            <rect x="436" y="838" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="456" y="846" class="t-muted" font-size="8">Database</text>
           </g>
         </g>
       </svg>
@@ -4981,6 +4995,18 @@
           <li>&bull; route() decides escalation as a pure, tested function</li>
           <li>&bull; Contested always reaches a human, in both production modes</li>
           <li>&bull; The model never rules on which side of a dispute is right</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot violet"></div>
+          <h3>Where a loop earns its place</h3>
+        </div>
+        <ul>
+          <li>&bull; A rewrite used to be accepted if it was merely non-empty</li>
+          <li>&bull; The critic ends the loop through ADK&#39;s own escalate signal</li>
+          <li>&bull; It cannot search: a model must not verify its own homework</li>
         </ul>
       </div>
     </div>

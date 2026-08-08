@@ -60,15 +60,22 @@ def build_search_toolset():
     orchestrator-retrieved path and the product still works.
     """
     global _toolset, _tried
-    if _tried:
+    if _toolset is not None:
         return _toolset
-    _tried = True
 
     from app.services.parallel_client import PARALLEL_API_KEY
 
     if not PARALLEL_API_KEY:
+        # No key is a settled answer, not a transient one.
+        _tried = True
         logger.info("No Parallel key; Fandom will use the retrieved-sources path.")
         return None
+
+    # A failure is NOT cached. Latching it meant one bad construction on a cold
+    # instance made that instance report MCP unavailable for its whole life,
+    # including to /api/health, while other instances served it fine.
+    if _tried and _toolset is None:
+        logger.debug("Retrying the Parallel MCP toolset after an earlier failure")
 
     try:
         from google.adk.tools.mcp_tool import MCPToolset, StreamableHTTPConnectionParams

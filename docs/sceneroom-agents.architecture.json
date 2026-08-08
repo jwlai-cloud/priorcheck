@@ -3,12 +3,12 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Sceneroom \u2014 ADK agent topology",
-    "subtitle": "Seven single-turn Gemini agents on a deterministic Python rail. No agent calls a tool, another agent, or the web.",
+    "subtitle": "Seven Gemini agents on a deterministic Python rail, plus one ADK LoopAgent where a loop is genuinely the right shape.",
     "output": "sceneroom-agents.html",
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/jwlai-cloud/sceneroom",
-      "revision": "e833bab42157f175d853cb51eef260e08c8a1279"
+      "revision": "c771e0430a16a2ac34e397f0bda0bead3cbb8f61"
     },
     "views": [
       {
@@ -102,8 +102,8 @@
     {
       "id": "writer",
       "type": "cloud",
-      "label": "Writer / Reviser",
-      "sublabel": "intent \u2192 scene, and applies fixes",
+      "label": "Writer",
+      "sublabel": "intent -> scene",
       "pos": [
         560,
         40
@@ -280,6 +280,27 @@
           "path": "app/services/ledger.py"
         }
       ]
+    },
+    {
+      "id": "reviseloop",
+      "type": "cloud",
+      "label": "Revise loop",
+      "sublabel": "reviser -> critic, until the fix lands",
+      "tag": "ADK LoopAgent",
+      "pos": [
+        560,
+        712
+      ],
+      "size": [
+        180,
+        62
+      ],
+      "sources": [
+        {
+          "path": "app/agents/reviser_loop.py",
+          "label": "LoopAgent + escalate"
+        }
+      ]
     }
   ],
   "boundaries": [
@@ -293,7 +314,8 @@
         "verifier",
         "fandom",
         "rights",
-        "adjudicator"
+        "adjudicator",
+        "reviseloop"
       ],
       "pad": 26
     }
@@ -356,11 +378,11 @@
       "via": [
         [
           365,
-          730
+          830
         ],
         [
           930,
-          730
+          830
         ]
       ]
     },
@@ -378,6 +400,12 @@
       "from": "orchestrator",
       "to": "adjudicator",
       "variant": "security"
+    },
+    {
+      "id": "revise",
+      "from": "orchestrator",
+      "to": "reviseloop",
+      "variant": "dashed"
     }
   ],
   "cards": [
@@ -406,6 +434,15 @@
         "route() decides escalation as a pure, tested function",
         "Contested always reaches a human, in both production modes",
         "The model never rules on which side of a dispute is right"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "Where a loop earns its place",
+      "items": [
+        "A rewrite used to be accepted if it was merely non-empty",
+        "The critic ends the loop through ADK's own escalate signal",
+        "It cannot search: a model must not verify its own homework"
       ]
     }
   ]
