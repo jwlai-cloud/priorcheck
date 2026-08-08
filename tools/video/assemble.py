@@ -66,23 +66,39 @@ def main() -> int:
     # One segment per beat, each retimed to its narration length. A beat whose
     # picture ran long is sped up; one that ran short is slowed. Either way the
     # segment ends up exactly as long as the voice that goes over it.
+    # Some beats have purpose-shot footage (a title card, the eval numbers, the
+    # topology diagram). Where one exists it wins: the screen recording had
+    # nothing to say during those.
+    aux_dir = CAP / "aux"
+
     segments: list[pathlib.Path] = []
-    plan: list[tuple[str, float, float, float]] = []
     for beat in timings["beats"]:
-        vid_len = beat["end"] - beat["start"]
-        want = lengths.get(beat["id"], vid_len)
-        speed = max(0.5, min(6.0, vid_len / want))  # setpts factor
+        want = lengths.get(beat["id"], beat["end"] - beat["start"])
+        aux = aux_dir / f"{beat['id']}.webm"
         seg = work / f"{beat['id']}.mp4"
-        run([
-            "ffmpeg", "-y", "-v", "error",
-            "-ss", str(beat["start"]), "-t", str(vid_len), "-i", str(src),
-            "-vf", f"setpts=PTS/{speed},fps=30,scale=1440:-2",
-            "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
-            "-pix_fmt", "yuv420p", str(seg),
-        ])
+
+        if aux.exists():
+            src_len = probe(aux)
+            speed = max(0.5, min(6.0, src_len / want))
+            run([
+                "ffmpeg", "-y", "-v", "error", "-i", str(aux),
+                "-vf", f"setpts=PTS/{speed},fps=30,scale=1440:-2",
+                "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+                "-pix_fmt", "yuv420p", str(seg),
+            ])
+            print(f"  {beat['id']:<14} {src_len:6.1f}s → {want:5.1f}s  ×{speed:.2f}  [card]")
+        else:
+            vid_len = beat["end"] - beat["start"]
+            speed = max(0.5, min(6.0, vid_len / want))
+            run([
+                "ffmpeg", "-y", "-v", "error",
+                "-ss", str(beat["start"]), "-t", str(vid_len), "-i", str(src),
+                "-vf", f"setpts=PTS/{speed},fps=30,scale=1440:-2",
+                "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+                "-pix_fmt", "yuv420p", str(seg),
+            ])
+            print(f"  {beat['id']:<14} {vid_len:6.1f}s → {want:5.1f}s  ×{speed:.2f}")
         segments.append(seg)
-        plan.append((beat["id"], vid_len, want, speed))
-        print(f"  {beat['id']:<14} {vid_len:6.1f}s → {want:5.1f}s  ×{speed:.2f}")
 
     concat = work / "list.txt"
     concat.write_text("".join(f"file '{s.name}'\n" for s in segments))
