@@ -8,7 +8,7 @@
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/jwlai-cloud/sceneroom",
-      "revision": "c771e0430a16a2ac34e397f0bda0bead3cbb8f61"
+      "revision": "c9a188b506be1c4a0575371a333509fdeda08026"
     },
     "views": [
       {
@@ -53,6 +53,16 @@
           "ledger"
         ],
         "note": "Every verdict, decision and rationale is appended, never edited."
+      },
+      {
+        "id": "revise",
+        "label": "Fixing, and checking the fix",
+        "focus": [
+          "orchestrator",
+          "reviseloop",
+          "verifier"
+        ],
+        "note": "Choosing 'fix it' revises, judges the revision, and only then re-checks against the web."
       }
     ]
   },
