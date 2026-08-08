@@ -38,7 +38,7 @@ import sys
 import urllib.request
 
 sys.path.insert(0, str(pathlib.Path(__file__).parent))
-from narration import BEATS  # noqa: E402
+from narration import BEATS
 
 OUT = pathlib.Path(__file__).parent / "audio"
 PROJECT = "agent-era"
@@ -110,7 +110,7 @@ def main() -> int:
         for v in CANDIDATES:
             p = OUT / f"_audition-{v}.mp3"
             p.write_bytes(synth(line, v, tok))
-            print(f"  {v}  →  {p}")
+            print(f"  {v}  ->  {p}")
         return 0
 
     total = 0.0

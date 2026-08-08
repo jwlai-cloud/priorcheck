@@ -86,7 +86,7 @@ def main() -> int:
                 "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
                 "-pix_fmt", "yuv420p", str(seg),
             ])
-            print(f"  {beat['id']:<14} {src_len:6.1f}s → {want:5.1f}s  ×{speed:.2f}  [card]")
+            print(f"  {beat['id']:<14} {src_len:6.1f}s → {want:5.1f}s  x{speed:.2f}  [card]")
         else:
             vid_len = beat["end"] - beat["start"]
             speed = max(0.5, min(6.0, vid_len / want))
@@ -97,7 +97,7 @@ def main() -> int:
                 "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
                 "-pix_fmt", "yuv420p", str(seg),
             ])
-            print(f"  {beat['id']:<14} {vid_len:6.1f}s → {want:5.1f}s  ×{speed:.2f}")
+            print(f"  {beat['id']:<14} {vid_len:6.1f}s → {want:5.1f}s  x{speed:.2f}")
         segments.append(seg)
 
     concat = work / "list.txt"
@@ -123,7 +123,7 @@ def main() -> int:
     afilter = f"atempo={tempo:.4f}" if tempo > 1.001 else "anull"
     vfilter = f"setpts=PTS/{tempo:.4f}" if tempo > 1.001 else "null"
     if tempo > 1.001:
-        print(f"over budget — tightening everything by ×{tempo:.3f}")
+        print(f"over budget — tightening everything by x{tempo:.3f}")
 
     run([
         "ffmpeg", "-y", "-v", "error",
