@@ -71,10 +71,14 @@ def audio_seconds() -> dict[str, float]:
 class Director:
     """Keeps the recording clock and logs when each beat starts."""
 
-    def __init__(self, page, lengths: dict[str, float]) -> None:
+    def __init__(self, page, lengths: dict[str, float], t0: float | None = None) -> None:
         self.page = page
         self.lengths = lengths
-        self.t0 = time.perf_counter()
+        # The recording starts when the context is created, not when the first
+        # beat does. Timing beats from later shifts every cut earlier by the
+        # navigation and unlock time — invisible on beats with long holds, and
+        # fatal on the frame beat, where the payoff is in the last seconds.
+        self.t0 = t0 if t0 is not None else time.perf_counter()
         self.marks: list[dict] = []
         self._current: str | None = None
 
@@ -119,6 +123,7 @@ def run(base: str, headed: bool) -> int:
             device_scale_factor=2,          # crisp text when scaled for upload
         )
         page = ctx.new_page()
+        recording_started = time.perf_counter()   # the video clock's zero
         errors: list[str] = []
         page.on("pageerror", lambda e: errors.append(str(e)))
 
@@ -128,7 +133,7 @@ def run(base: str, headed: bool) -> int:
             page.click("#gateForm button")
             page.wait_for_timeout(1200)
 
-        d = Director(page, lengths)
+        d = Director(page, lengths, t0=recording_started)
 
         # 1 — the problem. Nothing to show yet; the empty room is the shot.
         d.beat("problem")

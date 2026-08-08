@@ -36,6 +36,13 @@ OUT = HERE / "sceneroom-demo.mp4"
 
 TARGET = 174.0  # seconds; leaves headroom under a 3:00 cap
 
+# Beats whose point is at the END of the shot. Cutting these from the front and
+# speeding them up buries the payoff: the frame beat spends most of its length
+# waiting on Imagen, so the picture — the whole reason for the beat — got about
+# a second on screen. Keep the tail at normal speed instead.
+TAIL_BEATS = {"frame"}
+TAIL_KEEP = 4.0     # seconds of real footage before the freeze
+
 
 def run(cmd: list[str]) -> None:
     proc = subprocess.run(cmd, capture_output=True, text=True)
@@ -89,10 +96,37 @@ def main() -> int:
             print(f"  {beat['id']:<14} {src_len:6.1f}s → {want:5.1f}s  x{speed:.2f}  [card]")
         else:
             vid_len = beat["end"] - beat["start"]
-            speed = max(0.5, min(6.0, vid_len / want))
+            if beat["id"] in TAIL_BEATS and vid_len > want:
+                # Take the last few seconds and hold the final frame for the
+                # rest. Most of this beat is a progress state, and there is not
+                # 12 seconds of picture to show — but the picture is a still, so
+                # freezing it shows exactly what was on screen, for as long as
+                # the narration needs.
+                keep = min(TAIL_KEEP, vid_len)
+                seg_raw = work / f"{beat['id']}-raw.mp4"
+                run([
+                    "ffmpeg", "-y", "-v", "error",
+                    "-ss", str(beat["end"] - keep), "-t", str(keep), "-i", str(src),
+                    "-vf", "fps=30,scale=1440:-2", "-an",
+                    "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+                    "-pix_fmt", "yuv420p", str(seg_raw),
+                ])
+                run([
+                    "ffmpeg", "-y", "-v", "error", "-i", str(seg_raw),
+                    "-vf", f"tpad=stop_mode=clone:stop_duration={max(0.0, want - keep):.2f}",
+                    "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
+                    "-pix_fmt", "yuv420p", str(seg),
+                ])
+                segments.append(seg)
+                print(f"  {beat['id']:<14} {vid_len:6.1f}s -> {want:5.1f}s  "
+                      f"[last {keep:.0f}s, held]")
+                continue
+            else:
+                start = beat["start"]
+                speed = max(0.5, min(6.0, vid_len / want))
             run([
                 "ffmpeg", "-y", "-v", "error",
-                "-ss", str(beat["start"]), "-t", str(vid_len), "-i", str(src),
+                "-ss", str(start), "-t", str(vid_len), "-i", str(src),
                 "-vf", f"setpts=PTS/{speed},fps=30,scale=1440:-2",
                 "-an", "-c:v", "libx264", "-preset", "medium", "-crf", "20",
                 "-pix_fmt", "yuv420p", str(seg),
