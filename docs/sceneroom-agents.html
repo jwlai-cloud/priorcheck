@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="generator" content="archify 2.12.0">
+  <meta name="generator" content="archify 2.13.0">
   <title>Sceneroom — ADK agent topology Diagram</title>
   <script>
     // Resolve the theme before first paint so light-preference users don't
@@ -4498,11 +4498,11 @@
         <div class="pulse-dot"></div>
         <h1>Sceneroom — ADK agent topology</h1>
       </div>
-      <p class="subtitle">Seven Gemini agents on a deterministic Python rail, plus one ADK LoopAgent where a loop is genuinely the right shape.</p>
+      <p class="subtitle">Seven Gemini agents on a deterministic Python rail, plus an ADK Workflow graph where a loop is genuinely the right shape.</p>
     </div>
 
-    <script id="archify-guided-views-data" type="application/json">[{"id":"draft-path","label":"Draft and extract","focus":["room","orchestrator","writer","extractor"],"note":"The brief becomes a scene, then the scene becomes a list of checkable claims."},{"id":"evidence-path","label":"Where evidence comes from","focus":["orchestrator","parallel","verifier","fandom","rights"],"note":"The orchestrator retrieves. Agents only judge sources handed to them, so a citation cannot be invented."},{"id":"escalation","label":"Who decides","focus":["adjudicator","orchestrator","ledger"],"note":"Routing is a pure function; the model only writes the handoff note for a contested claim."},{"id":"record","label":"The provenance record","focus":["room","orchestrator","ledger"],"note":"Every verdict, decision and rationale is appended, never edited."},{"id":"revise","label":"Fixing, and checking the fix","focus":["orchestrator","reviseloop","verifier"],"note":"Choosing 'fix it' revises, judges the revision, and only then re-checks against the web."}]</script>
-    <script id="archify-source-evidence-data" type="application/json">{"schemaVersion":1,"verified":true,"repository":{"url":"https://github.com/jwlai-cloud/sceneroom","revision":"c9a188b506be1c4a0575371a333509fdeda08026","shortRevision":"c9a188b"},"referenceCount":12,"nodes":{"room":[{"path":"frontend/app.js","label":"console + run stream","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/frontend/app.js"}],"orchestrator":[{"path":"app/orchestrator.py","label":"draft → check → adjudicate","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/orchestrator.py"}],"writer":[{"path":"app/agents/writer.py","line":65,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/writer.py#L65"}],"extractor":[{"path":"app/agents/extractor.py","line":73,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/extractor.py#L73"}],"continuity":[{"path":"app/agents/continuity.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/continuity.py"}],"verifier":[{"path":"app/agents/verifier.py","line":102,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/verifier.py#L102"}],"fandom":[{"path":"app/agents/verifier.py","line":113,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/verifier.py#L113"}],"rights":[{"path":"app/agents/rights.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/rights.py"}],"adjudicator":[{"path":"app/agents/adjudicator.py","line":90,"label":"route() + handoff note","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/adjudicator.py#L90"}],"parallel":[{"path":"app/services/parallel_client.py","line":45,"href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/services/parallel_client.py#L45"}],"ledger":[{"path":"app/services/ledger.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/services/ledger.py"}],"reviseloop":[{"path":"app/agents/reviser_loop.py","label":"LoopAgent + escalate","href":"https://github.com/jwlai-cloud/sceneroom/blob/c9a188b506be1c4a0575371a333509fdeda08026/app/agents/reviser_loop.py"}]}}</script>
+    <script id="archify-guided-views-data" type="application/json">[{"id":"draft-path","label":"Draft and extract","focus":["room","orchestrator","writer","extractor"],"note":"The brief becomes a scene, then the scene becomes a list of checkable claims."},{"id":"evidence-path","label":"Where evidence comes from","focus":["orchestrator","parallel","verifier","fandom","rights"],"note":"The orchestrator retrieves. Agents only judge sources handed to them, so a citation cannot be invented."},{"id":"escalation","label":"Who decides","focus":["adjudicator","orchestrator","ledger"],"note":"Routing is a pure function; the model only writes the handoff note for a contested claim."},{"id":"record","label":"The provenance record","focus":["room","orchestrator","ledger"],"note":"Every verdict, decision and rationale is appended, never edited."},{"id":"revise","label":"Fixing, and checking the fix","focus":["orchestrator","reviseloop","verifier"],"note":"Choosing 'fix it' revises, judges the revision, and routes in code — only then re-checking against the web."}]</script>
+    <script id="archify-source-evidence-data" type="application/json">{"schemaVersion":1,"verified":true,"repository":{"url":"https://github.com/jwlai-cloud/sceneroom","revision":"be0ea5215373cb5f4b9a2c580cdfbc68c22e3972","shortRevision":"be0ea52"},"referenceCount":12,"nodes":{"room":[{"path":"frontend/app.js","label":"console + run stream","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/frontend/app.js"}],"orchestrator":[{"path":"app/orchestrator.py","label":"draft → check → adjudicate","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/orchestrator.py"}],"writer":[{"path":"app/agents/writer.py","line":65,"href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/writer.py#L65"}],"extractor":[{"path":"app/agents/extractor.py","line":73,"href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/extractor.py#L73"}],"continuity":[{"path":"app/agents/continuity.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/continuity.py"}],"verifier":[{"path":"app/agents/verifier.py","line":102,"href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/verifier.py#L102"}],"fandom":[{"path":"app/agents/verifier.py","line":113,"href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/verifier.py#L113"}],"rights":[{"path":"app/agents/rights.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/rights.py"}],"adjudicator":[{"path":"app/agents/adjudicator.py","line":90,"label":"route() + handoff note","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/adjudicator.py#L90"}],"parallel":[{"path":"app/services/parallel_client.py","line":45,"href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/services/parallel_client.py#L45"}],"ledger":[{"path":"app/services/ledger.py","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/services/ledger.py"}],"reviseloop":[{"path":"app/agents/revise_workflow.py","label":"Workflow + Event(route=...)","href":"https://github.com/jwlai-cloud/sceneroom/blob/be0ea5215373cb5f4b9a2c580cdfbc68c22e3972/app/agents/revise_workflow.py"}]}}</script>
     <div class="guided-views no-print" id="guided-views" hidden aria-label="Guided diagram views">
       <button id="guided-view-prev" type="button" aria-label="Previous guided view" title="Previous guided view ([)">&#8592;</button>
       <div class="guided-view-copy">
@@ -4546,7 +4546,7 @@
     <div class="diagram-container" data-detail-level="read">
       <svg viewBox="0 0 1050 862" role="img" aria-labelledby="archify-diagram-title archify-diagram-description" data-preset="classic" data-quality-profile="showcase">
         <title id="archify-diagram-title">Sceneroom — ADK agent topology</title>
-        <desc id="archify-diagram-description">Seven Gemini agents on a deterministic Python rail, plus one ADK LoopAgent where a loop is genuinely the right shape.</desc>
+        <desc id="archify-diagram-description">Seven Gemini agents on a deterministic Python rail, plus an ADK Workflow graph where a loop is genuinely the right shape.</desc>
         <!-- Definitions -->
         <defs>
           <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
@@ -4611,7 +4611,7 @@
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
           <text data-detail-anchor x="365" y="358" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Orchestrator</text>
-        <text data-detail="context" x="365" y="374" class="t-muted" font-size="9" text-anchor="middle">deterministic Python control flow</text>
+        <text data-detail="context" x="365" y="374" class="t-muted" font-size="8.1" text-anchor="middle">deterministic Python control flow</text>
         <text data-detail="fine" x="365" y="394" class="t-backend" font-size="7" text-anchor="middle">the only caller</text>
         </g>
 
@@ -4668,7 +4668,7 @@
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
           <text data-detail-anchor x="650" y="451" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Fandom</text>
-        <text data-detail="context" x="650" y="467" class="t-muted" font-size="9" text-anchor="middle">what has this audience litigated?</text>
+        <text data-detail="context" x="650" y="467" class="t-muted" font-size="8.6" text-anchor="middle">what has this audience litigated?</text>
         </g>
 
         <g id="node-rights" data-node-id="rights" data-node-label="Rights" tabindex="0" role="button" aria-label="Focus Rights, does using it need permission?, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="does using it need permission?" data-node-tag="never says cleared" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
@@ -4691,7 +4691,7 @@
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
           <text data-detail-anchor x="650" y="649" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Adjudicator</text>
-        <text data-detail="context" x="650" y="665" class="t-muted" font-size="9" text-anchor="middle">route() decides; the model only writes the note</text>
+        <text data-detail="context" x="650" y="665" class="t-muted" font-size="6" text-anchor="middle">route() decides; the model only writes the note</text>
         <text data-detail="fine" x="650" y="674" class="t-cloud" font-size="7" text-anchor="middle">routing is code</text>
         </g>
 
@@ -4720,16 +4720,16 @@
         <text data-detail="fine" x="930" y="394" class="t-database" font-size="7" text-anchor="middle">BigQuery on env</text>
         </g>
 
-        <g id="node-reviseloop" data-node-id="reviseloop" data-node-label="Revise loop" tabindex="0" role="button" aria-label="Focus Revise loop, reviser -&gt; critic, until the fix lands, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="reviser -&gt; critic, until the fix lands" data-node-tag="ADK LoopAgent" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
-          <title>Revise loop · reviser -&gt; critic, until the fix lands · Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools · ADK LoopAgent</title>
+        <g id="node-reviseloop" data-node-id="reviseloop" data-node-label="Revise graph" tabindex="0" role="button" aria-label="Focus Revise graph, reviser -&gt; critic -&gt; route, until the fix lands, Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="reviser -&gt; critic -&gt; route, until the fix lands" data-node-tag="ADK Workflow" data-node-context="Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools">
+          <title>Revise graph · reviser -&gt; critic -&gt; route, until the fix lands · Vertex AI · gemini-flash-latest — each agent is one ADK LlmAgent: single turn, structured output, no tools · ADK Workflow</title>
           <rect x="560" y="712" width="180" height="62" rx="6" class="c-mask"/>
           <rect x="560" y="712" width="180" height="62" rx="6" class="c-cloud" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="cloud" class="semantic-sigil s-cloud" transform="translate(566 718) scale(0.6875)">
             <path d="M4.3 12.5h7.3a2.4 2.4 0 0 0 .2-4.8 4 4 0 0 0-7.5-1.3A3.1 3.1 0 0 0 4.3 12.5Z"/>
           </g>
-          <text data-detail-anchor x="650" y="741" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Revise loop</text>
-        <text data-detail="context" x="650" y="757" class="t-muted" font-size="9" text-anchor="middle">reviser -&gt; critic, until the fix lands</text>
-        <text data-detail="fine" x="650" y="766" class="t-cloud" font-size="7" text-anchor="middle">ADK LoopAgent</text>
+          <text data-detail-anchor x="650" y="741" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Revise graph</text>
+        <text data-detail="context" x="650" y="757" class="t-muted" font-size="6" text-anchor="middle">reviser -&gt; critic -&gt; route, until the fix lands</text>
+        <text data-detail="fine" x="650" y="766" class="t-cloud" font-size="7" text-anchor="middle">ADK Workflow</text>
         </g>
 
         <!-- Connection labels -->
@@ -4756,27 +4756,27 @@
 
 
         <!-- Legend -->
-        <g data-legend-bridge>
-          <text x="40" y="833" class="t-primary" font-size="9" font-weight="600">Legend</text>
-          <g data-legend-kind="frontend">
+        <g data-legend data-legend-bridge>
+          <text x="40" y="826" class="t-primary" font-size="10" font-weight="600">Legend</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="Frontend" data-legend-x="40" data-legend-baseline="846" data-legend-width="82">
             <rect x="40" y="838" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
-            <text x="60" y="846" class="t-muted" font-size="8">Frontend</text>
+            <text x="61" y="846" class="t-muted" font-size="8">Frontend</text>
           </g>
-          <g data-legend-kind="backend">
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Backend" data-legend-x="144" data-legend-baseline="846" data-legend-width="77">
             <rect x="144" y="838" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="164" y="846" class="t-muted" font-size="8">Backend</text>
+            <text x="165" y="846" class="t-muted" font-size="8">Backend</text>
           </g>
-          <g data-legend-kind="cloud">
-            <rect x="243" y="838" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
-            <text x="263" y="846" class="t-muted" font-size="8">Cloud</text>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="Database" data-legend-x="243" data-legend-baseline="846" data-legend-width="82">
+            <rect x="243" y="838" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="264" y="846" class="t-muted" font-size="8">Database</text>
           </g>
-          <g data-legend-kind="external">
-            <rect x="332" y="838" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
-            <text x="352" y="846" class="t-muted" font-size="8">External</text>
+          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Cloud" data-legend-x="347" data-legend-baseline="846" data-legend-width="67">
+            <rect x="347" y="838" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
+            <text x="368" y="846" class="t-muted" font-size="8">Cloud</text>
           </g>
-          <g data-legend-kind="database">
-            <rect x="436" y="838" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-            <text x="456" y="846" class="t-muted" font-size="8">Database</text>
+          <g data-legend-semantic-kind="external" data-legend-kind="external" data-legend-label="External" data-legend-x="436" data-legend-baseline="846" data-legend-width="82">
+            <rect x="436" y="838" width="14" height="9" rx="2" class="c-external" stroke-width="1"/>
+            <text x="457" y="846" class="t-muted" font-size="8">External</text>
           </g>
         </g>
       </svg>
@@ -5001,11 +5001,11 @@
       <div class="card">
         <div class="card-header">
           <div class="card-dot violet"></div>
-          <h3>Where a loop earns its place</h3>
+          <h3>Where a graph earns its place</h3>
         </div>
         <ul>
           <li>&bull; A rewrite used to be accepted if it was merely non-empty</li>
-          <li>&bull; The critic ends the loop through ADK&#39;s own escalate signal</li>
+          <li>&bull; Routing is a plain function, not a model — ADR 002 restated</li>
           <li>&bull; It cannot search: a model must not verify its own homework</li>
         </ul>
       </div>
@@ -5495,6 +5495,7 @@
         });
         Array.prototype.forEach.call(clone.querySelectorAll('[data-legend-kind]'), function (el) {
           el.removeAttribute('data-legend-kind');
+          el.removeAttribute('data-legend-label');
           el.removeAttribute('data-legend-count');
           el.removeAttribute('data-legend-zero');
           el.removeAttribute('data-legend-selected');
@@ -12453,7 +12454,8 @@
           }
           entry.setAttribute('role', 'button');
           entry.setAttribute('tabindex', legendEntries.length ? '-1' : '0');
-          entry.setAttribute('aria-label', 'Inspect ' + fact.label + ', ' + count + ' node' + (count === 1 ? '' : 's'));
+          var visibleLabel = entry.getAttribute('data-legend-label') || fact.label;
+          entry.setAttribute('aria-label', 'Inspect ' + visibleLabel + ', ' + count + ' node' + (count === 1 ? '' : 's'));
           entry.setAttribute('aria-pressed', 'false');
           entry.setAttribute('aria-haspopup', 'dialog');
           entry.setAttribute('aria-controls', 'semantic-lens');

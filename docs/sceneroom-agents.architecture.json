@@ -3,12 +3,12 @@
   "diagram_type": "architecture",
   "meta": {
     "title": "Sceneroom \u2014 ADK agent topology",
-    "subtitle": "Seven Gemini agents on a deterministic Python rail, plus one ADK LoopAgent where a loop is genuinely the right shape.",
+    "subtitle": "Seven Gemini agents on a deterministic Python rail, plus an ADK Workflow graph where a loop is genuinely the right shape.",
     "output": "sceneroom-agents.html",
     "quality_profile": "showcase",
     "repository": {
       "url": "https://github.com/jwlai-cloud/sceneroom",
-      "revision": "c9a188b506be1c4a0575371a333509fdeda08026"
+      "revision": "be0ea5215373cb5f4b9a2c580cdfbc68c22e3972"
     },
     "views": [
       {
@@ -62,7 +62,7 @@
           "reviseloop",
           "verifier"
         ],
-        "note": "Choosing 'fix it' revises, judges the revision, and only then re-checks against the web."
+        "note": "Choosing 'fix it' revises, judges the revision, and routes in code \u2014 only then re-checking against the web."
       }
     ]
   },
@@ -294,9 +294,9 @@
     {
       "id": "reviseloop",
       "type": "cloud",
-      "label": "Revise loop",
-      "sublabel": "reviser -> critic, until the fix lands",
-      "tag": "ADK LoopAgent",
+      "label": "Revise graph",
+      "sublabel": "reviser -> critic -> route, until the fix lands",
+      "tag": "ADK Workflow",
       "pos": [
         560,
         712
@@ -307,8 +307,8 @@
       ],
       "sources": [
         {
-          "path": "app/agents/reviser_loop.py",
-          "label": "LoopAgent + escalate"
+          "path": "app/agents/revise_workflow.py",
+          "label": "Workflow + Event(route=...)"
         }
       ]
     }
@@ -448,10 +448,10 @@
     },
     {
       "dot": "violet",
-      "title": "Where a loop earns its place",
+      "title": "Where a graph earns its place",
       "items": [
         "A rewrite used to be accepted if it was merely non-empty",
-        "The critic ends the loop through ADK's own escalate signal",
+        "Routing is a plain function, not a model \u2014 ADR 002 restated",
         "It cannot search: a model must not verify its own homework"
       ]
     }

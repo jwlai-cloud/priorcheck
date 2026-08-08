@@ -85,6 +85,28 @@ claiming omniscience. A production needs "get a consultant" as much as it needs
 least-privilege service account.
 **Partner:** Parallel Search API **and** Parallel MCP server.
 
+### Seven agents, and one graph
+
+Six of the seven are single-turn `LlmAgent`s with an `output_schema`. The
+seventh path — choosing **fix it** — is an ADK **`Workflow` graph**:
+
+    START -> prepare -> reviser -> stash -> critic -> route
+                 ^                                     |
+                 +--------------- "retry" -------------+
+
+Only `reviser` and `critic` are models; `prepare`, `stash` and `route` are
+ordinary Python. Before this, any non-empty rewrite was accepted, so a revision
+that changed the wording but not the fact went into another full round of live
+checking on the writer's time.
+
+We built it as a `LoopAgent` first and ported it. Not because ADK deprecates
+`LoopAgent`, but because the graph makes **the routing decision a plain
+function** — the ADK docs describe the graph API as *"switching between
+non-deterministic AI-powered agents and deterministic code as needed"*, which is
+the same argument as the guarantee below. `LoopAgent` terminates on `escalate`,
+set from inside a tool on the model's own agent, so the decision to stop lived
+with the model.
+
 ### The structural decision: agents have no tools
 
 Retrieval lives in Python. The orchestrator calls Parallel and pastes the
@@ -143,6 +165,22 @@ models the project could actually see was the only reliable way to find out.
 Every one of these was found by **running the thing** — several only by driving
 the real page in a browser.
 
+### We built an evaluation set, and it disagreed with us
+
+Fifteen claims with known answers, two of them genuinely disputed. The two error
+types are scored separately, because they are not equally bad — a *miss* costs
+the writer a decision, a *wrong call* ships an error.
+
+    base   10/15 correct · 5 missed · 0 wrong
+    pro    13/15 correct · 1 missed · 1 WRONG   <- ruled on a live dispute
+    after  12/15 correct · 3 missed · 0 wrong
+
+We had been telling ourselves the better search setting was simply better. It
+scored higher **and** ruled on whether Sejong invented Hangul unaided — which
+specialists genuinely dispute, and which is the one thing this product must
+never do. The fix was an instruction, not a model. We traded one correct answer
+for zero wrong calls, and that is the right trade here.
+
 ## Accomplishments
 
 - Seven agents, live, streaming their real timings and findings during the ~30s
@@ -172,7 +210,6 @@ the real page in a browser.
   checking scene 12 against scenes 1–11 is the obvious next step.
 - **House-style skills.** Verification playbooks as loadable ADK Skills, so a
   standards desk adds its own guidelines without forking.
-- **An eval set** to turn "verification feels better with `pro`" into a number.
 - **Named consultants** with real routing, so escalation reaches a person rather
   than a role.
 

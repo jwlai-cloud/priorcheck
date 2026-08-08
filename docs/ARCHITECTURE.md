@@ -41,7 +41,7 @@ trusted to choose evidence about *what has been argued about*, never about
 
 | Agent | Asks | Grounded in |
 |---|---|---|
-| **Writer** / Reviser | Turn a brief into a scene; apply an accepted correction | — |
+| **Writer** | Turn a brief into a scene | — |
 | **Extractor** | What in this scene is checkable? | the scene text |
 | **Continuity** | Does this contradict our own canon? | the production bible, **no search** |
 | **Verifier** | Is this true? | Parallel **Search API**, orchestrator-retrieved |
@@ -52,6 +52,26 @@ trusted to choose evidence about *what has been argued about*, never about
 Every agent is one ADK `LlmAgent` on `gemini-flash-latest`: single turn,
 `output_schema`, no retries loop. Many small structured calls, not deep
 reasoning.
+
+### Fixing is a graph, not a call
+
+Choosing **fix it** runs an ADK `Workflow`:
+
+    START -> prepare -> reviser -> stash -> critic -> route
+                 ^                                     |
+                 +--------------- "retry" -------------+   ("done" -> finish)
+
+`prepare`, `stash`, `route` and `finish` are ordinary Python; only `reviser` and
+`critic` are models. The critic reads the rewrite and decides whether the
+correction actually landed — before that, any non-empty rewrite was accepted and
+a revision that changed the wording but not the fact went straight into another
+full round of live checking.
+
+Routing is `decide_route`, a pure function. That is the same argument as the
+Adjudicator below, and it is why this is a graph rather than a `LoopAgent`:
+`LoopAgent` terminates on `escalate`, set from inside a tool on the model's own
+agent, so the decision to stop lived with the model. See
+[ADR 007](adr/007-workflow-graph-over-loopagent.md).
 
 ### The Adjudicator is split on purpose
 
@@ -108,6 +128,7 @@ behind it spends money.
 | `app/orchestrator.py` | the workflow, and the only caller of Parallel |
 | `app/agents/` | seven agents, one file per question |
 | `app/agents/adjudicator.py` | `route()` — the escalation rule, as code |
+| `app/agents/revise_workflow.py` | the fix/critique graph, and its routing function |
 | `app/services/parallel_client.py` | Search API seam + offline fixtures |
 | `app/services/parallel_mcp.py` | the MCP toolset, given to one agent |
 | `app/services/ledger.py` | append-only provenance, in-memory or BigQuery |

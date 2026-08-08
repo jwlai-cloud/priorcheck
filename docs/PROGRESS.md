@@ -22,7 +22,10 @@ on the submission page · revision `sceneroom-00010-7gm`
 | Access gate | cookie-based, guards the five endpoints that spend money |
 | One payoff frame | `gemini-3.1-flash-image`, only once nothing is open |
 | Tests | 30 unit, ruff clean |
-| Docs | `ARCHITECTURE.md`, 6 ADRs, topology diagram, `SUBMISSION.md`, `VIDEO.md` |
+| Docs | `ARCHITECTURE.md`, 7 ADRs, topology diagram, `SUBMISSION.md`, `VIDEO.md`, `TUTORIAL.md` |
+| Revise graph | ✅ ADK `Workflow` — reviser → critic → route, retry once |
+| ADK / scaffold | ✅ 2.6.1, migrated to `agents-cli-manifest.yaml` |
+| Demo video | ✅ 2:54, `tools/video/` rebuilds it in three commands |
 | Recent scenes + record export | reopen past work; download the provenance record |
 | Continuity actually fires | the bible example produces canon claims |
 
@@ -34,7 +37,7 @@ and `contested`, records the decision to BigQuery, and renders the frame.
 
 | | Notes |
 |---|---|
-| **3-minute video** | Shot plan in `docs/VIDEO.md`. Recording is yours — budget two days. |
+| **3-minute video** | v3 cut exists and plays. Awaiting your notes. |
 | **Devpost write-up** | Written: `docs/SUBMISSION.md`. Paste and submit. |
 | Verification quality | `pro` processor + tightened objectives landed. Still conservative — an eval set would turn "it feels better" into a number. |
 | Named escalation human | UI says "Standards desk". A real name would land better on video. |
@@ -65,7 +68,7 @@ standards desk could add without forking.
    `/` — a successful-looking deploy with no product in it.
 3. `/api/scenes/stream` was shadowed by `/api/scenes/{scene_id}` and 404'd as
    "No such scene".
-4. `mcp` 2.x moved `mcp.shared.session`; ADK 2.5 imports it, catches the
+4. `mcp` 2.x moved `mcp.shared.session`; ADK imports it, catches the
    ImportError, and logs at debug — the MCP toolset vanishes silently. Pinned
    `<2.0`.
 5. `imagen-*` publisher models are not available to this project in any region

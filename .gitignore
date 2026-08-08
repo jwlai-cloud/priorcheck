@@ -38,3 +38,4 @@ dist/
 tools/video/audio/
 tools/video/capture/
 tools/video/*.mp4
+.google-agents-cli/
