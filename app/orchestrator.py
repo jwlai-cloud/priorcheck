@@ -35,7 +35,7 @@ import uuid
 from app.agents.adjudicator import build_adjudicator, route
 from app.agents.continuity import build_continuity
 from app.agents.extractor import build_extractor
-from app.agents.reviser_loop import build_revise_loop
+from app.agents.revise_workflow import build_revise_workflow
 from app.agents.rights import build_rights
 from app.agents.verifier import build_fandom, build_verifier
 from app.agents.writer import build_writer
@@ -510,28 +510,24 @@ async def decide(
     ledger = get_ledger()
 
     if disposition == Disposition.FIXED:
-        prompt = (
-            f"Current scene:\n{scene.text}\n\n"
-            f"Flagged claim: {claim.text}\n"
-            f"What the sources establish: {claim.reasoning}\n"
-            + (f"The production bible says: {claim.bible_says}\n" if claim.bible_says else "")
-            + "\nRevise the scene to correct this, then check your own work."
-        )
         async with _step(tracker, "writer") as step:
-            # Revise, then check the revision, and try again if it did not land.
+            # Revise, judge the revision, and go round once more if it missed.
             # Accepting the first non-empty rewrite meant a revision that changed
             # the wording but not the fact was passed straight into another full
             # round of live checking, on the writer's time.
-            state = await run_agent_state(build_revise_loop(), prompt)
-            revision = state.get("revision") or {}
-            critique = state.get("critique") or {}
-            new_text = str(revision.get("text", "")).strip()
-            verdict = critique.get("verdict") if isinstance(critique, dict) else None
-            attempts = critique.get("attempts", 1) if isinstance(critique, dict) else 1
+            workflow, outcome = build_revise_workflow(
+                claim=claim.text,
+                finding=claim.reasoning,
+                bible_says=claim.bible_says,
+            )
+            await run_agent_state(workflow, scene.text)
+            new_text = outcome["text"].strip()
+            verdict = outcome["verdict"]
+            attempts = outcome["attempts"] or 1
             if not new_text:
                 _detail(step, "no revision produced")
             else:
-                what = revision.get("what_changed") or "revised the scene"
+                what = outcome["what_changed"] or "revised the scene"
                 # Say when the critic was still unhappy. A revision that ran out
                 # of attempts is worth knowing about, not worth hiding.
                 suffix = (

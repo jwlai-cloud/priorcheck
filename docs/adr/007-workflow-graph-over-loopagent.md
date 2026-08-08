@@ -1,6 +1,6 @@
-# 007 — LoopAgent over Workflow, for now
+# 007 — The Workflow graph, not LoopAgent
 
-**Status:** Accepted, with a known expiry · 2026-08-08
+**Status:** Accepted · 2026-08-08 (superseded the earlier decision to keep LoopAgent)
 
 ## Context
 
@@ -68,24 +68,49 @@ with the claim and sources in state, and the scene passed node to node.
 
 ## Decision
 
-Keep the `LoopAgent` **for this submission**. It works, it is covered by tests,
-and the container pins ADK 2.5, so a future removal cannot break the deployment
-during judging. The port above is understood and small, but it is a rewrite of a
-working path four weeks from a deadline, and nothing about the product improves
-by doing it now.
+Ported. The revise cycle is now a `Workflow`:
+
+    START -> prepare -> reviser -> stash -> critic -> route
+                 ^                                     |
+                 +--------------- "retry" -------------+   ("done" -> finish)
+
+`prepare`, `stash`, `route` and `finish` are ordinary Python; only `reviser` and
+`critic` are models.
+
+The deciding argument was not the deprecation warning. It is that **the routing
+decision becomes a plain function**, which is ADR 002 restated — the model
+judges, code decides what happens next. The docs describe the graph API in those
+exact terms: "switching between non-deterministic AI-powered agents and
+deterministic code as needed".
+
+`LoopAgent` could not express that. Its termination signal is `escalate`, set
+from inside a tool on the model's own agent, so the decision to stop lived with
+the model. Here it lives in `decide_route`.
 
 ## Consequences
 
-- A deprecation warning appears in logs. It is noise, not a fault, and this
-  record is the answer to anyone who spots it.
-- The port is understood rather than deferred blindly. The work is: move the
-  claim and sources into workflow state, thread the prompt as node input, and
-  normalise the route key at the point it is emitted rather than trusting the
-  model's wording.
+- No deprecation warning, and no `LoopAgent`.
+- **Route keys are normalised in code, not asked for in a prompt.** The first
+  attempt failed because the model answered "Not Fixed" against a `"not_fixed"`
+  edge; a route is matched exactly, so no edge matched, the branch ended
+  silently, and the retry was simply lost. `normalise_verdict` now maps anything
+  that is not an acceptance to `not_fixed` — ambiguity falls towards checking
+  again, never towards shipping.
+- The claim and finding travel in a closure rather than session state. The
+  workflow is built per decision, so they are constants for its whole life and
+  cannot drift the way a shared key can.
+- The deterministic parts are module-level pure functions the graph wraps rather
+  than closures buried in nodes. The first test pass could not reach them
+  without guessing at ADK's node internals, which was the design telling on
+  itself.
+- An explicit `finish` node terminates the accepted route. A route with no edge
+  also ends the branch, but ADK logs a warning every time — noise on the
+  successful path.
+
+Verified live: the Motorola handie-talkie became a period-correct police call
+box, verdict `fixed` on the first attempt. 47 unit tests.
 
 ## What would change this
 
-Pinning a later ADK where `LoopAgent` is actually removed, or needing a shape
-`LoopAgent` cannot express — a branch that skips the critic, or a join across
-several revision attempts. Both are `Workflow`'s natural territory and neither
-is needed today.
+Nothing about the shape. If the cycle ever needs to fan out — several revisions
+judged in parallel and joined — that is `JoinNode`, already in the same API.

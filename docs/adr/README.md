@@ -12,4 +12,4 @@ so a future session can overturn one on evidence rather than on taste.
 | [004](004-mcp-for-one-agent-only.md) | Parallel MCP for the Fandom agent only | Accepted |
 | [005](005-stream-runs-over-sse.md) | Stream runs over SSE, not a polled registry | Accepted |
 | [006](006-append-only-ledger-in-bigquery.md) | An append-only BigQuery ledger, holding scenes too | Accepted |
-| [007](007-loopagent-over-workflow-for-now.md) | LoopAgent over the Workflow graph API, for now | Accepted, with a known expiry |
+| [007](007-workflow-graph-over-loopagent.md) | The Workflow graph, not LoopAgent | Accepted |
