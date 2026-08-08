@@ -237,8 +237,13 @@ def run(base: str, headed: bool) -> int:
 
         # 10 — the payoff frame.
         d.beat("frame")
+        # Back to the top: the ledger beat scrolled away, and the button lives
+        # in the stage header. An earlier cut filmed nothing here.
+        page.evaluate("window.scrollTo({top: 0})")
+        page.wait_for_timeout(600)
         btn = page.locator("#frameBtn")
-        if btn.is_visible():
+        print(f"    frame button: count={btn.count()} visible={btn.is_visible() if btn.count() else False}")
+        if btn.count() and btn.is_visible():
             btn.click()
             try:
                 page.wait_for_selector("#frameWrap:not([hidden])", timeout=300_000)

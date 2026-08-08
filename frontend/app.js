@@ -129,7 +129,7 @@ function renderCrew() {
 
 // --- streaming --------------------------------------------------------------
 
-function run(url, { onScene, working }) {
+function run(url, { onScene, working, resetsCrew = true }) {
   if (busy) return;
   setBusy(true);
   $("crewHead").textContent = "While the crew runs";
@@ -137,7 +137,13 @@ function run(url, { onScene, working }) {
   if (stream) stream.close();
   stream = new EventSource(url);
 
-  stream.addEventListener("crew", (e) => resetCrew(JSON.parse(e.data).agents));
+  // Only reset the roster when agents are actually going to run. A
+  // keep-deliberate decision streams a crew event but runs nothing, and
+  // repainting seven pending rows under "the pass is done" claims work that
+  // never happened.
+  stream.addEventListener("crew", (e) => {
+    if (resetsCrew) resetCrew(JSON.parse(e.data).agents);
+  });
   stream.addEventListener("step", (e) => applyStep(JSON.parse(e.data)));
 
   stream.addEventListener("scene", (e) => {
@@ -460,6 +466,8 @@ function askThenDecide(claimId, disposition) {
 function decide(claimId, disposition, rationale) {
   const q = new URLSearchParams({ claim_id: claimId, disposition, rationale });
   run(`/api/stream/scenes/${scene.id}/decide?${q}`, {
+    // Only "fix it" runs the crew again; the other two just record.
+    resetsCrew: disposition === "fixed",
     working: disposition === "fixed"
       ? "Revising the scene, then checking it again — a fix must not introduce a new error."
       : "Recording the decision.",
